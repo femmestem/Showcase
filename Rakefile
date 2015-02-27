@@ -34,7 +34,7 @@ if (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) != nil
   `chcp 65001`
 end
 
-desc "Initial setup for Octopress: copies the default theme into the path of Jekyll's generator. Rake install defaults to rake install[classic] to install a different theme run rake install[some_theme_name]"
+desc "Initial setup for Octoportfolio: copies the default theme into the path of Jekyll's generator. Rake install defaults to rake install[classic] to install a different theme run rake install[some_theme_name]"
 task :install, :theme do |t, args|
   if File.directory?(source_dir) || File.directory?("sass")
     abort("rake aborted!") unless ask("A theme is already installed, proceeding will overwrite existing files. Are you sure?", ['y', 'n']) == 'y'
@@ -56,7 +56,7 @@ end
 
 desc "Generate jekyll site"
 task :generate do
-  raise "### You haven't set anything up yet. First run `rake install` to set up an Octopress theme." unless File.directory?(source_dir)
+  raise "### You haven't set anything up yet. First run `rake install` to set up an Octoportfolio theme." unless File.directory?(source_dir)
   puts "## Generating Site with Jekyll"
   system "compass compile --css-dir #{source_dir}/stylesheets"
   system "jekyll build"
@@ -64,7 +64,7 @@ end
 
 desc "Watch the site and regenerate when it changes"
 task :watch do
-  raise "### You haven't set anything up yet. First run `rake install` to set up an Octopress theme." unless File.directory?(source_dir)
+  raise "### You haven't set anything up yet. First run `rake install` to set up an Octoportfolio theme." unless File.directory?(source_dir)
   puts "Starting to watch source with Jekyll and Compass."
   system "compass compile --css-dir #{source_dir}/stylesheets" unless File.exist?("#{source_dir}/stylesheets/screen.css")
   jekyllPid = Process.spawn({"OCTOPRESS_ENV"=>"preview"}, "jekyll build --watch")
@@ -80,7 +80,7 @@ end
 
 desc "preview the site in a web browser"
 task :preview do
-  raise "### You haven't set anything up yet. First run `rake install` to set up an Octopress theme." unless File.directory?(source_dir)
+  raise "### You haven't set anything up yet. First run `rake install` to set up an Octoportfolio theme." unless File.directory?(source_dir)
   puts "Starting to watch source with Jekyll and Compass. Starting Rack on port #{server_port}"
   system "compass compile --css-dir #{source_dir}/stylesheets" unless File.exist?("#{source_dir}/stylesheets/screen.css")
   jekyllPid = Process.spawn({"OCTOPRESS_ENV"=>"preview"}, "jekyll build --watch")
@@ -103,7 +103,7 @@ task :new_post, :title do |t, args|
   else
     title = get_stdin("Enter a title for your post: ")
   end
-  raise "### You haven't set anything up yet. First run `rake install` to set up an Octopress theme." unless File.directory?(source_dir)
+  raise "### You haven't set anything up yet. First run `rake install` to set up an Octoportfolio theme." unless File.directory?(source_dir)
   mkdir_p "#{source_dir}/#{posts_dir}"
   filename = "#{source_dir}/#{posts_dir}/#{datestamp}-#{title.to_url}.#{new_post_ext}"
   if File.exist?(filename)
@@ -124,7 +124,7 @@ end
 # usage rake new_page[my-new-page] or rake new_page[my-new-page.html] or rake new_page (defaults to "new-page.markdown")
 desc "Create a new page in #{source_dir}/(filename)/index.#{new_page_ext}"
 task :new_page, :filename do |t, args|
-  raise "### You haven't set anything up yet. First run `rake install` to set up an Octopress theme." unless File.directory?(source_dir)
+  raise "### You haven't set anything up yet. First run `rake install` to set up an Octoportfolio theme." unless File.directory?(source_dir)
   args.with_defaults(:filename => 'new-page')
   page_dir = [source_dir]
   if args.filename.downcase =~ /(^.+\/)?(.+)/
@@ -325,9 +325,9 @@ task :setup_github_pages, :repo do |t, args|
   end
   branch = (repo_url.match(/\/[\w-]+\.github\.(?:io|com)/).nil?) ? 'gh-pages' : 'master'
   project = (branch == 'gh-pages') ? repo_url.match(/([^\/]+?)(\.git|$)/i)[1] : ''
-  unless (`git remote -v` =~ /origin.+?octopress(?:\.git)?/).nil?
-    # If octopress is still the origin remote (from cloning) rename it to octopress
-    system "git remote rename origin octopress"
+  unless (`git remote -v` =~ /origin.+?octoportfolio(?:\.git)?/).nil?
+    # If octoportfolio is still the origin remote (from cloning) rename it to octoportfolio
+    system "git remote rename origin octoportfolio"
     if branch == 'master'
       # If this is a user/organization pages repository, add the correct origin remote
       # and checkout the source branch for committing changes to the blog source.
@@ -353,9 +353,9 @@ task :setup_github_pages, :repo do |t, args|
   mkdir deploy_dir
   cd "#{deploy_dir}" do
     system "git init"
-    system 'echo "My Octopress Page is coming soon &hellip;" > index.html'
+    system 'echo "My Octoportfolio Page is coming soon &hellip;" > index.html'
     system "git add ."
-    system "git commit -m \"Octopress init\""
+    system "git commit -m \"Octoportfolio init\""
     system "git branch -m gh-pages" unless branch == 'master'
     system "git remote add origin #{repo_url}"
     rakefile = IO.read(__FILE__)
