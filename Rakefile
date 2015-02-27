@@ -15,6 +15,8 @@ deploy_default = "rsync"
 deploy_branch  = "gh-pages"
 
 ## -- Misc Configs -- ##
+timestamp = Time.now.strftime('%Y-%m-%d %H:%M:%S %z')
+datestamp = Time.now.strftime('%Y-%m-%d')
 
 public_dir      = "public"    # compiled site directory
 source_dir      = "source"    # source file directory
@@ -35,7 +37,7 @@ end
 desc "Initial setup for Octopress: copies the default theme into the path of Jekyll's generator. Rake install defaults to rake install[classic] to install a different theme run rake install[some_theme_name]"
 task :install, :theme do |t, args|
   if File.directory?(source_dir) || File.directory?("sass")
-    abort("rake aborted!") if ask("A theme is already installed, proceeding will overwrite existing files. Are you sure?", ['y', 'n']) == 'n'
+    abort("rake aborted!") unless ask("A theme is already installed, proceeding will overwrite existing files. Are you sure?", ['y', 'n']) == 'y'
   end
   # copy theme into working Jekyll directories
   theme = args.theme || 'classic'
@@ -103,16 +105,16 @@ task :new_post, :title do |t, args|
   end
   raise "### You haven't set anything up yet. First run `rake install` to set up an Octopress theme." unless File.directory?(source_dir)
   mkdir_p "#{source_dir}/#{posts_dir}"
-  filename = "#{source_dir}/#{posts_dir}/#{Time.now.strftime('%Y-%m-%d')}-#{title.to_url}.#{new_post_ext}"
+  filename = "#{source_dir}/#{posts_dir}/#{datestamp}-#{title.to_url}.#{new_post_ext}"
   if File.exist?(filename)
-    abort("rake aborted!") if ask("#{filename} already exists. Do you want to overwrite?", ['y', 'n']) == 'n'
+    abort("rake aborted!") unless ask("#{filename} already exists. Do you want to overwrite?", ['y', 'n']) == 'y'
   end
   puts "Creating new post: #{filename}"
   open(filename, 'w') do |post|
     post.puts "---"
     post.puts "layout: post"
     post.puts "title: \"#{title.gsub(/&/,'&amp;')}\""
-    post.puts "date: #{Time.now.strftime('%Y-%m-%d %H:%M:%S %z')}"
+    post.puts "date: #{timestamp}"
     post.puts "comments: true"
     post.puts "categories: "
     post.puts "---"
@@ -140,14 +142,14 @@ task :new_page, :filename do |t, args|
     mkdir_p page_dir
     file = "#{page_dir}/#{filename}.#{extension}"
     if File.exist?(file)
-      abort("rake aborted!") if ask("#{file} already exists. Do you want to overwrite?", ['y', 'n']) == 'n'
+      abort("rake aborted!") unless ask("#{file} already exists. Do you want to overwrite?", ['y', 'n']) == 'y'
     end
     puts "Creating new page: #{file}"
     open(file, 'w') do |page|
       page.puts "---"
       page.puts "layout: page"
       page.puts "title: \"#{title}\""
-      page.puts "date: #{Time.now.strftime('%Y-%m-%d %H:%M')}"
+      page.puts "date: #{timestamp}"
       page.puts "comments: true"
       page.puts "sharing: true"
       page.puts "footer: true"
@@ -252,7 +254,7 @@ desc "deploy public directory to github pages"
 multitask :push do
   puts "## Deploying branch to Github Pages "
   puts "## Pulling any updates from Github Pages "
-  cd "#{deploy_dir}" do 
+  cd "#{deploy_dir}" do
     Bundler.with_clean_env { system "git pull" }
   end
   (Dir["#{deploy_dir}/*"]).each { |f| rm_rf(f) }
@@ -379,9 +381,9 @@ def get_stdin(message)
   STDIN.gets.chomp
 end
 
-def ask(message, valid_options)
+def ask(message, valid_options = false)
   if valid_options
-    answer = get_stdin("#{message} #{valid_options.to_s.gsub(/"/, '').gsub(/, /,'/')} ") while !valid_options.include?(answer)
+    answer = get_stdin("#{message} #{valid_options.to_s.gsub(/"/, '').gsub(/, /,'/')} ") until valid_options.include?(answer)
   else
     answer = get_stdin(message)
   end
