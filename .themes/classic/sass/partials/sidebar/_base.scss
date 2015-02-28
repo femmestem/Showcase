@@ -34,8 +34,6 @@ aside.sidebar {
     list-style: none;
     padding: .5em 0;
     margin: 0;
-    border-bottom: 1px solid $sidebar-border;
-    @extend .side-shadow-border;
     p:last-child {
       margin-bottom: 0;
     }
@@ -78,7 +76,6 @@ aside.sidebar {
       @include border-bottom-right-radius(.3em);
       text-align: center;
       background: $main-bg $noise-bg;
-      border-bottom: 1px solid $sidebar-border;
       border-right: 1px solid $sidebar-border;
       content: "\00BB";
       text-indent: -1px;

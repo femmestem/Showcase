@@ -1,7 +1,7 @@
 body > nav {
   position: relative;
   background-color: $nav-bg;
-  @include background($nav-bg-front, $nav-bg-back);
+  @include background($nav-bg-gradient);
   border: {
     top: 1px solid $nav-border-top;
     bottom: 1px solid $nav-border-bottom; }
@@ -19,7 +19,7 @@ body > nav {
       @include border-radius(.5em);
       @include background-clip(padding-box);
       @include box-shadow(lighten($nav-bg, 2) 0 1px);
-      background-color: lighten($nav-bg, 15);
+      background-color: $search-bg;
       border: 1px solid $nav-border;
       color: #888;
       &:focus {
@@ -113,9 +113,9 @@ body > nav {
   &:after {
     content: "";
     position: absolute; top: -1px; left: 0;
-    background-color: lighten($nav-color, 25);
+    background-color: $nav-color;
   }
-  &:hover:after { background-color: lighten($nav-color, 20); }
+  &:hover:after { background-color: darken($nav-color, 15); }
 }
 .maskImage {
   body > nav {

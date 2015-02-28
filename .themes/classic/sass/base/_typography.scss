@@ -1,10 +1,10 @@
 $blockquote: $type-border !default;
-$sans: "PT Sans", "Helvetica Neue", Arial, sans-serif !default;
-$serif: "PT Serif", Georgia, Times, "Times New Roman", serif !default;
+$sans: "Open Sans", "Helvetica Neue", Arial, sans-serif !default;
+$serif: "Quattrocento", Georgia, Times, "Times New Roman", serif !default;
 $mono: Menlo, Monaco, "Andale Mono", "lucida console", "Courier New", monospace !default;
-$heading-font-family: "PT Serif", "Georgia", "Helvetica Neue", Arial, sans-serif !default;
-$header-title-font-family: $heading-font-family !default;
-$header-subtitle-font-family: $heading-font-family !default;
+$heading-font-family: $sans, "Georgia", "Helvetica Neue", Arial, sans-serif !default;
+$header-title-font-family: "Oswald", $heading-font-family !default;
+$header-subtitle-font-family: $serif, $heading-font-family !default;
 
 // Fonts
 .heading {
