@@ -24,6 +24,7 @@ blog_index_dir  = "source/blog"    # directory for your blog's index page (if yo
 deploy_dir      = "_deploy"   # deploy directory (for Github pages deployment)
 stash_dir       = "_stash"    # directory to stash posts for speedy generation
 posts_dir       = "_posts"    # directory for blog files
+drafts_dir       = "_drafts"    # directory for unpublished blog posts
 themes_dir      = ".themes"   # directory for blog files
 new_post_ext    = "markdown"  # default new post file extension when using the new_post task
 new_page_ext    = "markdown"  # default new page file extension when using the new_page task
@@ -157,6 +158,33 @@ task :new_page, :filename do |t, args|
     end
   else
     puts "Syntax error: #{args.filename} contains unsupported characters"
+  end
+end
+
+# usage rake new_draft[my-unpublished-draft] or rake new_draft['my new unpublished draft'] or rake new_draft (defaults to "new-draft")
+desc "Begin a new draft post in #{source_dir}/#{drafts_dir}"
+task :new_draft, :title do |t, args|
+  if args.title
+    title = args.title
+  else
+    title = get_stdin("Enter a title for your draft: ")
+    title = "new-draft" if title.empty?
+  end
+  raise "### You haven't set anything up yet. First run `rake install` to set up an Octoportfolio theme." unless File.directory?(source_dir)
+  mkdir_p "#{source_dir}/#{drafts_dir}"
+  filename = "#{source_dir}/#{drafts_dir}/#{title.to_url}.#{new_post_ext}"
+  if File.exist?(filename)
+    abort("rake aborted!") unless ask("#{filename} already exists. Do you want to overwrite?", ['y', 'n']) == 'y'
+  end
+  puts "Creating new draft: #{filename}"
+  open(filename, 'w') do |draft|
+    draft.puts "---"
+    draft.puts "layout: post"
+    draft.puts "title: \"#{title.gsub(/&/,'&amp;')}\""
+    draft.puts "sidebar: true"
+    draft.puts "comments: true"
+    draft.puts "categories: "
+    draft.puts "---"
   end
 end
 
