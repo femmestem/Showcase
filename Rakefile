@@ -106,6 +106,7 @@ task :new_post, :title do |t, args|
     title = args.title
   else
     title = get_stdin("Enter a title for your post: ")
+    title = "new-post" if title.empty?
   end
   raise "### You haven't set anything up yet. First run `rake install` to set up an Octoportfolio theme." unless File.directory?(source_dir)
   mkdir_p "#{source_dir}/#{posts_dir}"
