@@ -228,6 +228,43 @@ task :publish, :title do |t, args|
   puts "Done. #{@publish_count} drafts published."
 end
 
+desc "Unpublish post from #{source_dir}/#{posts_dir} and move to #{source_dir}/#{drafts_dir}"
+task :unpublish, :title do |t, args|
+  @unpublish_count = 0
+  title = args.title.to_url unless args.title.nil?
+  posts = Dir.entries("#{source_dir}/#{posts_dir}").reject! { |file| file =~ /^\./ }
+  match = filter_files(filename: title, list: posts)
+
+  post_list = match.count > 0 ? match : posts
+  post_list = to_indexed_hash(post_list)
+  post_menu = menuize(post_list)
+  menu_selection = ask("Published posts:\n" +  post_menu.join("\n") + "\nEnter item number(s) of post title(s) to unpublish:")
+
+  # accept multiple selection answer delimited by space or comma
+  posts_to_unpub = menu_selection.split(/[,\s]/).reject(&:empty?)
+
+  posts_to_unpub.each do |item|
+    selection = item.to_i
+
+    if post_list.has_key? selection
+      title = post_list[selection].sub(/\d{4}-\d{2}-\d{2}-/, '')
+      draft_file = "#{source_dir}/#{drafts_dir}/#{title}"
+      post_file = "#{source_dir}/#{posts_dir}/#{datestamp}-#{title}"
+
+      unless File.exists?(draft_file) and ask("#{title} already exists. Do you want to overwrite?", ['y', 'n']) != 'y'
+        update_yml(file: post_file, var: "date", value: "")
+        mv "#{post_file}", "#{draft_file}"
+        @unpublish_count += 1
+      end
+
+    else
+      puts "No post found for \"#{item}\". Skipping..."
+    end
+  end
+
+  puts "Done. #{@unpublish_count} posts unpublished."
+end
+
 # usage rake isolate[my-post]
 desc "Move all other posts than the one currently being worked on to a temporary stash location (stash) so regenerating the site happens much more quickly."
 task :isolate, :filename do |t, args|
