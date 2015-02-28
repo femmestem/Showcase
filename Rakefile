@@ -79,12 +79,15 @@ task :watch do
   [jekyllPid, compassPid].each { |pid| Process.wait(pid) }
 end
 
-desc "preview the site in a web browser"
-task :preview do
+# usage: `rake preview` to see published posts or `rake preview[drafts]` to include drafts in preview
+desc "Preview the site in a web browser. Optionally preview site with drafts."
+task :preview, :drafts do |t, args|
   raise "### You haven't set anything up yet. First run `rake install` to set up an Octoportfolio theme." unless File.directory?(source_dir)
   puts "Starting to watch source with Jekyll and Compass. Starting Rack on port #{server_port}"
   system "compass compile --css-dir #{source_dir}/stylesheets" unless File.exist?("#{source_dir}/stylesheets/screen.css")
-  jekyllPid = Process.spawn({"OCTOPRESS_ENV"=>"preview"}, "jekyll build --watch")
+  build_type = "jekyll build --watch"
+  build_type << " --drafts" if args.drafts && args.drafts[/^draft/]
+  jekyllPid = Process.spawn({"Octoportfolio_ENV"=>"preview"}, "#{build_type}")
   compassPid = Process.spawn("compass watch")
   rackupPid = Process.spawn("rackup --port #{server_port}")
 
