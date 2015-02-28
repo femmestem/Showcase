@@ -191,6 +191,43 @@ task :new_draft, :title do |t, args|
   end
 end
 
+desc "Publish post from #{source_dir}/#{drafts_dir}"
+task :publish, :title do |t, args|
+  @publish_count = 0
+  title = args.title.to_url unless args.title.nil?
+  drafts = Dir.entries("#{source_dir}/#{drafts_dir}").reject! { |file| file =~ /^\./ }
+  match = filter_files(filename: title, list: drafts)
+
+  draft_list = match.count > 0 ? match : drafts
+  draft_list = to_indexed_hash(draft_list)
+  draft_menu = menuize(draft_list)
+  menu_selection = ask("Drafts waiting to be published:\n" +  draft_menu.join("\n") + "\nEnter item number(s) of draft title(s) to publish:")
+
+  # accept answer with multiple selections delimited by space or comma
+  drafts_to_pub = menu_selection.split(/[,\s]/).reject(&:empty?)
+
+  drafts_to_pub.each do |item|
+    selection = item.to_i
+
+    if draft_list.has_key? selection
+      title = draft_list[selection]
+      draft_file = "#{source_dir}/#{drafts_dir}/#{title}"
+      post_file = "#{source_dir}/#{posts_dir}/#{datestamp}-#{title}"
+
+      unless File.exists?(post_file) and ask("#{title} already exists. Do you want to overwrite?", ['y', 'n']) != 'y'
+        update_yml(file: draft_file, var: "date", value: timestamp)
+        mv "#{draft_file}", "#{post_file}"
+        @publish_count += 1
+      end
+
+    else
+      puts "No draft found for \"#{item}\". Skipping..."
+    end
+  end
+
+  puts "Done. #{@publish_count} drafts published."
+end
+
 # usage rake isolate[my-post]
 desc "Move all other posts than the one currently being worked on to a temporary stash location (stash) so regenerating the site happens much more quickly."
 task :isolate, :filename do |t, args|
@@ -397,6 +434,37 @@ task :setup_github_pages, :repo do |t, args|
     end
   end
   puts "\n---\n## Now you can deploy to #{repo_url} with `rake deploy` ##"
+end
+
+def update_yml(args = {})
+  file, var, value = args[:file], args[:var], args[:value]
+
+  contents = IO.read(file)
+  yml_regex = /^-{3}.+^-{3}$/m
+  yml = contents.scan(yml_regex).first
+
+  if yml.scan(/#{var}/).empty?
+    yml.sub!(/^-{3}/, "---\n#{var}: #{value}")
+  else
+    yml.gsub!(/^#{var}.*$/, "#{var}: #{value}")
+  end
+
+  File.open(file, 'w') do |f|
+    f.puts contents.sub(yml_regex, yml)
+  end
+end
+
+def menuize(collection)
+  collection.map { |pair| pair.join(" ) ") }
+end
+
+def to_indexed_hash(ary)
+  Hash[ary.map.with_index.to_a].invert
+end
+
+def filter_files(args = {})
+  filename, list = args[:filename], args[:list]
+  matches = list.select { |file| file =~ /#{filename}/ }
 end
 
 def ok_failed(condition)
