@@ -57,7 +57,7 @@ end
 
 desc "Generate jekyll site"
 task :generate do
-  raise "### You haven't set anything up yet. First run `rake install` to set up an Octoportfolio theme." unless File.directory?(source_dir)
+  verify_installation(source_dir)
   puts "## Generating Site with Jekyll"
   system "compass compile --css-dir #{source_dir}/stylesheets"
   system "jekyll build"
@@ -65,7 +65,7 @@ end
 
 desc "Watch the site and regenerate when it changes"
 task :watch do
-  raise "### You haven't set anything up yet. First run `rake install` to set up an Octoportfolio theme." unless File.directory?(source_dir)
+  verify_installation(source_dir)
   puts "Starting to watch source with Jekyll and Compass."
   system "compass compile --css-dir #{source_dir}/stylesheets" unless File.exist?("#{source_dir}/stylesheets/screen.css")
   jekyllPid = Process.spawn({"OCTOPRESS_ENV"=>"preview"}, "jekyll build --watch")
@@ -82,7 +82,7 @@ end
 # usage: `rake preview` to see published posts or `rake preview[drafts]` to include drafts in preview
 desc "Preview the site in a web browser. Optionally preview site with drafts."
 task :preview, :drafts do |t, args|
-  raise "### You haven't set anything up yet. First run `rake install` to set up an Octoportfolio theme." unless File.directory?(source_dir)
+  verify_installation(source_dir)
   puts "Starting to watch source with Jekyll and Compass. Starting Rack on port #{server_port}"
   system "compass compile --css-dir #{source_dir}/stylesheets" unless File.exist?("#{source_dir}/stylesheets/screen.css")
   build_type = "jekyll build --watch"
@@ -102,13 +102,13 @@ end
 # usage rake new_post[my-new-post] or rake new_post['my new post'] or rake new_post (defaults to "new-post")
 desc "Begin a new post in #{source_dir}/#{posts_dir}"
 task :new_post, :title do |t, args|
+  verify_installation(source_dir)
   if args.title
     title = args.title
   else
     title = get_stdin("Enter a title for your post: ")
     title = "new-post" if title.empty?
   end
-  raise "### You haven't set anything up yet. First run `rake install` to set up an Octoportfolio theme." unless File.directory?(source_dir)
   mkdir_p "#{source_dir}/#{posts_dir}"
   filename = "#{source_dir}/#{posts_dir}/#{datestamp}-#{title.to_url}.#{new_post_ext}"
   if File.exist?(filename)
@@ -129,9 +129,10 @@ end
 # usage rake new_page[my-new-page] or rake new_page[my-new-page.html] or rake new_page (defaults to "new-page.markdown")
 desc "Create a new page in #{source_dir}/(filename)/index.#{new_page_ext}"
 task :new_page, :filename do |t, args|
-  raise "### You haven't set anything up yet. First run `rake install` to set up an Octoportfolio theme." unless File.directory?(source_dir)
+  verify_installation(source_dir)
   args.with_defaults(:filename => 'new-page')
   page_dir = [source_dir]
+
   if args.filename.downcase =~ /(^.+\/)?(.+)/
     filename, dot, extension = $2.rpartition('.').reject(&:empty?)         # Get filename and extension
     title = filename
@@ -168,13 +169,13 @@ end
 # usage rake new_draft[my-unpublished-draft] or rake new_draft['my new unpublished draft'] or rake new_draft (defaults to "new-draft")
 desc "Begin a new draft post in #{source_dir}/#{drafts_dir}"
 task :new_draft, :title do |t, args|
+  verify_installation(source_dir)
   if args.title
     title = args.title
   else
     title = get_stdin("Enter a title for your draft: ")
     title = "new-draft" if title.empty?
   end
-  raise "### You haven't set anything up yet. First run `rake install` to set up an Octoportfolio theme." unless File.directory?(source_dir)
   mkdir_p "#{source_dir}/#{drafts_dir}"
   filename = "#{source_dir}/#{drafts_dir}/#{title.to_url}.#{new_post_ext}"
   if File.exist?(filename)
@@ -292,7 +293,7 @@ desc "Move sass to sass.old, install sass theme updates, replace sass/custom wit
 task :update_style, :theme do |t, args|
   theme = args.theme || 'classic'
   if File.directory?("sass.old")
-    puts "removed existing sass.old directory"
+    puts "Removed existing sass.old directory"
     rm_r "sass.old", :secure=>true
   end
   mv "sass", "sass.old"
@@ -341,7 +342,7 @@ desc "Generate website and deploy"
 task :gen_deploy => [:integrate, :generate, :deploy] do
 end
 
-desc "copy dot files for deployment"
+desc "Copy dot files for deployment"
 task :copydot, :source, :dest do |t, args|
   FileList["#{args.source}/**/.*"].exclude("**/.", "**/..", "**/.DS_Store", "**/._*").each do |file|
     cp_r file, file.gsub(/#{args.source}/, "#{args.dest}") unless File.directory?(file)
@@ -358,7 +359,7 @@ task :rsync do
   ok_failed system("rsync -avze 'ssh -p #{ssh_port}' #{exclude} #{rsync_args} #{"--delete" unless rsync_delete == false} #{public_dir}/ #{ssh_user}:#{document_root}")
 end
 
-desc "deploy public directory to github pages"
+desc "Deploy public directory to github pages"
 multitask :push do
   puts "## Deploying branch to Github Pages "
   puts "## Pulling any updates from Github Pages "
@@ -476,6 +477,10 @@ task :setup_github_pages, :repo do |t, args|
   puts "\n---\n## Now you can deploy to #{repo_url} with `rake deploy` ##"
 end
 
+###################
+# Rake Task Helpers #
+###################
+
 def update_yml(args = {})
   file, var, value = args[:file], args[:var], args[:value]
 
@@ -494,6 +499,10 @@ def update_yml(args = {})
   end
 end
 
+def verify_installation(source_dir)
+  raise "### You haven't set anything up yet. First run `rake install` to set up an Octoportfolio theme." unless File.directory?(source_dir)
+end
+
 def menuize(collection)
   collection.map { |pair| pair.join(" ) ") }
 end
@@ -502,13 +511,22 @@ def to_indexed_hash(ary)
   ary.map.with_index { |elem, i| [i+1, elem] }.to_h
 end
 
+def set_title(args = {})
+  title, doctype = args[:title], args[:doctype]
+  unless title
+    title = get_stdin("Enter a title for your #{doctype}: ")
+    title = "new-#{doctype}" if title.empty?
+  end
+  title
+end
+
 def filter_files(args = {})
   filename, list = args[:filename], args[:list]
   matches = list.select { |file| file =~ /#{filename}/ }
 end
 
 def ok_failed(condition)
-  if (condition)
+  if condition
     puts "OK"
   else
     puts "FAILED"
@@ -540,7 +558,7 @@ def blog_url(user, project, source_dir)
   url
 end
 
-desc "list tasks"
+desc "List tasks"
 task :list do
   puts "Tasks: #{(Rake::Task.tasks - [Rake::Task[:list]]).join(', ')}"
   puts "(type rake -T for more detail)\n\n"
