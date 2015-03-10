@@ -246,7 +246,7 @@ task :unpublish, :title do |t, args|
 
       unless File.exists?(draft_file) and ask("#{title} already exists. Do you want to overwrite?", ['y', 'n']) != 'y'
         puts "\nReverting #{title} to draft..."
-        update_yml(file: post_file, var: "date", value: "")
+        update_yml(file: post_file, var: "date")
         mv "#{post_file}", "#{draft_file}"
         @unpublish_count += 1
       end
@@ -474,14 +474,21 @@ end
 def update_yml(args = {})
   file, var, value = args[:file], args[:var], args[:value]
 
+  if value and not value.empty?
+    updated_var = "\n#{var}: #{value}"
+  else
+    updated_var = ""
+  end
+
   contents = IO.read(file)
   yml_regex = /^-{3}.+^-{3}$/m
   yml = contents.scan(yml_regex).first
 
   if yml.scan(/#{var}/).empty?
-    yml.sub!(/^-{3}/, "---\n#{var}: #{value}")
+    return if updated_var.empty?
+    yml.sub!(/^-{3}/, "---#{updated_var}")
   else
-    yml.gsub!(/^#{var}.*$/, "#{var}: #{value}")
+    yml.gsub!(/^#{var}.*\s/, updated_var)
   end
 
   File.open(file, 'w') do |f|
