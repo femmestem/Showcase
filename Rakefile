@@ -103,12 +103,7 @@ end
 desc "Begin a new post in #{source_dir}/#{posts_dir}"
 task :new_post, :title do |t, args|
   verify_installation(source_dir)
-  if args.title
-    title = args.title
-  else
-    title = get_stdin("Enter a title for your post: ")
-    title = "new-post" if title.empty?
-  end
+  title = set_title(title: args.title, doctype: "post")
   mkdir_p "#{source_dir}/#{posts_dir}"
   filename = "#{source_dir}/#{posts_dir}/#{datestamp}-#{title.to_url}.#{new_post_ext}"
   if File.exist?(filename)
@@ -170,12 +165,7 @@ end
 desc "Begin a new draft post in #{source_dir}/#{drafts_dir}"
 task :new_draft, :title do |t, args|
   verify_installation(source_dir)
-  if args.title
-    title = args.title
-  else
-    title = get_stdin("Enter a title for your draft: ")
-    title = "new-draft" if title.empty?
-  end
+  title = set_title(title: args.title, doctype: "draft")
   mkdir_p "#{source_dir}/#{drafts_dir}"
   filename = "#{source_dir}/#{drafts_dir}/#{title.to_url}.#{new_post_ext}"
   if File.exist?(filename)
