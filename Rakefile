@@ -216,6 +216,7 @@ task :publish, :title do |t, args|
       post_file = "#{source_dir}/#{posts_dir}/#{datestamp}-#{title}"
 
       unless File.exists?(post_file) and ask("#{title} already exists. Do you want to overwrite?", ['y', 'n']) != 'y'
+        puts "\nPublishing #{title}..."
         update_yml(file: draft_file, var: "date", value: timestamp)
         mv "#{draft_file}", "#{post_file}"
         @publish_count += 1
@@ -226,7 +227,7 @@ task :publish, :title do |t, args|
     end
   end
 
-  puts "Done. #{@publish_count} drafts published."
+  puts "\nDone. #{@publish_count} drafts published."
 end
 
 desc "Unpublish post from #{source_dir}/#{posts_dir} and move to #{source_dir}/#{drafts_dir}"
@@ -253,6 +254,7 @@ task :unpublish, :title do |t, args|
       post_file = "#{source_dir}/#{posts_dir}/#{datestamp}-#{title}"
 
       unless File.exists?(draft_file) and ask("#{title} already exists. Do you want to overwrite?", ['y', 'n']) != 'y'
+        puts "\nReverting #{title} to draft..."
         update_yml(file: post_file, var: "date", value: "")
         mv "#{post_file}", "#{draft_file}"
         @unpublish_count += 1
@@ -263,7 +265,7 @@ task :unpublish, :title do |t, args|
     end
   end
 
-  puts "Done. #{@unpublish_count} posts unpublished."
+  puts "\nDone. #{@unpublish_count} posts unpublished."
 end
 
 # usage rake isolate[my-post]
@@ -497,7 +499,7 @@ def menuize(collection)
 end
 
 def to_indexed_hash(ary)
-  Hash[ary.map.with_index.to_a].invert
+  ary.map.with_index { |elem, i| [i+1, elem] }.to_h
 end
 
 def filter_files(args = {})
