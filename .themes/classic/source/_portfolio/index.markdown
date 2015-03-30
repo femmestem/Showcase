@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: portfolio_index
 title: "Portfolio"
 projects: []
 permalink: /portfolio/index.html
@@ -7,17 +7,3 @@ comments: false
 sharing: false
 footer: false
 ---
-<h1>{{ page.title }}</h1>
-
-{{ content }}
-
-{% for project in site.portfolio %}
-{% if page.projects contains project.title %}
-<div class="projects" id="{{ title }}">
-    <h2><a href="{{ project.url }}">{{ project.title }}</a></h2>
-    <p>Project url: {{ project.url }} </p>
-    <button><a href="{{ project.sourcecode }}">Source Code</a></button>
-    <button><a href="{{ project.demo }}">Demo</a></button>
-</div>
-{% endif %}
-{% endfor %}
