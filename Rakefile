@@ -1,6 +1,7 @@
 require "rubygems"
 require "bundler/setup"
 require "stringex"
+require "./plugins/titlecase"
 require "./plugins/cli_menu_helpers"
 require "./plugins/publisher"
 
@@ -110,22 +111,21 @@ end
 desc "Begin a new post in #{source_dir}/#{posts_dir}"
 task :new_post, :title do |t, args|
   verify_installation(source_dir)
-  title = set_title(title: args.title, doctype: "post")
+
+  title = set_title(title: args.title, default: "new post")
+  file = "#{source_dir}/#{posts_dir}/#{datestamp}-#{title.to_url}.#{new_post_ext}"
+  abort("rake aborted!") if File.exist? file unless overwrite_confirmed? file
+  yml = {
+    date: datetimestamp,
+    layout: "post",
+    title: "\"#{title.gsub(/&/,'&amp;').titlecase}\"",
+    comments: "true",
+    categories: ""
+  }
+
   mkdir_p "#{source_dir}/#{posts_dir}"
-  filename = "#{source_dir}/#{posts_dir}/#{datestamp}-#{title.to_url}.#{new_post_ext}"
-  if File.exist?(filename)
-    abort("rake aborted!") unless ask("#{filename} already exists. Do you want to overwrite?", ['y', 'n']) == 'y'
-  end
-  puts "Creating new post: #{filename}"
-  open(filename, 'w') do |post|
-    post.puts "---"
-    post.puts "layout: post"
-    post.puts "title: \"#{title.gsub(/&/,'&amp;')}\""
-    post.puts "date: #{timestamp}"
-    post.puts "comments: true"
-    post.puts "categories: "
-    post.puts "---"
-  end
+  puts "Creating new post: #{file}"
+  write_new_page(file, yml)
 end
 
 # usage rake new_page[my-new-page] or rake new_page[my-new-page.html] or rake new_page (defaults to "new-page.markdown")
@@ -133,61 +133,52 @@ desc "Create a new page in #{source_dir}/(filename)/index.#{new_page_ext}"
 task :new_page, :filename do |t, args|
   verify_installation(source_dir)
   args.with_defaults(:filename => 'new-page')
-  page_dir = [source_dir]
 
-  if args.filename.downcase =~ /(^.+\/)?(.+)/
-    filename, dot, extension = $2.rpartition('.').reject(&:empty?)         # Get filename and extension
-    title = filename
-    page_dir.concat($1.downcase.sub(/^\//, '').split('/')) unless $1.nil?  # Add path to page_dir Array
-    if extension.nil?
-      page_dir << filename
-      filename = "index"
-    end
-    extension ||= new_page_ext
-    page_dir = page_dir.map! { |d| d = d.to_url }.join('/')                # Sanitize path
-    filename = filename.downcase.to_url
+  page_context = get_page_context(file: args.filename, base_dir: source_dir)
+  dir = page_context[:directory]
+  filename = page_context[:filename]
+  ext = page_context[:extension]
+  title = page_context[:basename]
 
-    mkdir_p page_dir
-    file = "#{page_dir}/#{filename}.#{extension}"
-    if File.exist?(file)
-      abort("rake aborted!") unless ask("#{file} already exists. Do you want to overwrite?", ['y', 'n']) == 'y'
-    end
-    puts "Creating new page: #{file}"
-    open(file, 'w') do |page|
-      page.puts "---"
-      page.puts "layout: page"
-      page.puts "title: \"#{title}\""
-      page.puts "date: #{timestamp}"
-      page.puts "comments: true"
-      page.puts "sharing: true"
-      page.puts "footer: true"
-      page.puts "---"
-    end
-  else
-    puts "Syntax error: #{args.filename} contains unsupported characters"
-  end
+  ext ||= new_page_ext
+
+  page = "#{dir}/#{filename}.#{ext}"
+  page_alias = "#{dir}/_#{filename}.#{ext}" # check for conflict with portfolio of same title as page name
+  abort("rake aborted! \"#{dir}/\" conflicts with existing portfolio \"#{page_alias}/\" when building site") if File.exist? page_alias
+  abort("rake aborted!") if File.exist? page unless overwrite_confirmed? page
+
+  yml = {
+    layout: "page",
+    title: "\"#{title.titlecase}\"",
+    date: datetimestamp,
+    comments: "true",
+    sharing: "true",
+    footer: "true"
+  }
+
+  mkdir_p dir
+  puts "Creating new page: #{page}"
+  write_new_page(page, yml)
 end
 
 # usage rake new_draft[my-unpublished-draft] or rake new_draft['my new unpublished draft'] or rake new_draft (defaults to "new-draft")
 desc "Begin a new draft post in #{source_dir}/#{drafts_dir}"
 task :new_draft, :title do |t, args|
   verify_installation(source_dir)
-  title = set_title(title: args.title, doctype: "draft")
+
+  title = set_title(title: args.title, default: "new draft")
+  file = "#{source_dir}/#{drafts_dir}/#{title.to_url}.#{new_post_ext}"
+  abort("rake aborted!") if File.exist? file unless overwrite_confirmed? file
+  yml = {
+    layout: "post",
+    title: "\"#{title.gsub(/&/,'&amp;').titlecase}\"",
+    comments: "true",
+    categories: ""
+  }
+
   mkdir_p "#{source_dir}/#{drafts_dir}"
-  filename = "#{source_dir}/#{drafts_dir}/#{title.to_url}.#{new_post_ext}"
-  if File.exist?(filename)
-    abort("rake aborted!") unless ask("#{filename} already exists. Do you want to overwrite?", ['y', 'n']) == 'y'
-  end
-  puts "Creating new draft: #{filename}"
-  open(filename, 'w') do |draft|
-    draft.puts "---"
-    draft.puts "layout: post"
-    draft.puts "title: \"#{title.gsub(/&/,'&amp;')}\""
-    draft.puts "sidebar: true"
-    draft.puts "comments: true"
-    draft.puts "categories: "
-    draft.puts "---"
-  end
+  puts "Creating new draft: #{file}"
+  write_new_page(file, yml)
 end
 
 desc "Publish posts from #{source_dir}/#{drafts_dir} to #{source_dir}/#{posts_dir}"
@@ -472,17 +463,72 @@ task :setup_github_pages, :repo do |t, args|
 end
 
 
+################
+# Rake Helpers #
+################
 
+def verify_installation(source_dir)
+  unless File.directory?(source_dir)
+    raise "### You haven't set anything up yet.
+    First run 'rake install' to set up an Octoportfolio theme."
+  end
+end
 
+def set_title(args = {})
+  title = args[:title]
+  default = args[:default] || "untitled"
 
+  unless title
+    title = get_stdin("Enter a title: ")
+    title = default if title.empty?
+  end
+  title.downcase
+end
 
+def write_new_page(file, front_matter = {})
+  unless front_matter.is_a? Hash
+    raise ArgumentError, "Invalid front matter format.
+    Must contain 'variable: value'"
+  end
+  front_matter = { layout: "default" }.merge! front_matter
 
+    File.open(file, 'w') do |page|
+      page.puts "---"
+      front_matter.each { |key ,value| page.puts "#{key}: #{value}" }
+      page.puts "---"
+    end
+end
 
+def get_page_context(args = {})
+  context = {}
+  file, page_dir = args[:file].downcase, [ args[:base_dir] ]
+  unless file =~ /(^.+\/)?(.+)/
+    raise "Syntax error: #{file} contains unsupported characters"
+  end
+  dir, file = $1, $2
 
+  # Get basename and extension
+  basename, dot, ext = file.rpartition('.').reject(&:empty?)
+  context[:basename] = basename
+  context[:extension] = ext
 
+  unless dir.nil?
+    dir = dir.split('/').reject(&:empty?)
+    page_dir += dir
+  end
 
+  if ext.nil?
+    page_dir << basename
+    basename = "index"
+  end
 
+  # Sanitize page_dir
+  page_dir = page_dir.map { |d| d = d.to_url }.join('/')
+  context[:directory] = page_dir
+  context[:filename] = basename.to_url
 
+  context
+end
 
 def blog_url(user, project, source_dir)
   cname = "#{source_dir}/CNAME"
