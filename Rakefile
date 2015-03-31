@@ -4,6 +4,7 @@ require "stringex"
 require "./plugins/titlecase"
 require "./plugins/cli_menu_helpers"
 require "./plugins/publisher"
+require "./plugins/octoportfolio"
 
 ## -- Rsync Deploy config -- ##
 # Be sure your public key is listed in your server's ~/.ssh/authorized_keys file
@@ -164,6 +165,7 @@ end
 # usage rake new_portfolio[my-new-portfolio] or rake new_portfolio[my-new-portfolio.html] or rake new_portfolio (defaults to "new-portfolio.markdown")
 desc "Create a new portfolio in #{source_dir}/_(title)"
 task :new_portfolio, [:title] do |t, args|
+  include Octoportfolio
   verify_installation(source_dir)
 
   title = set_title(title: args.title, default: "new portfolio")
@@ -187,6 +189,7 @@ task :new_portfolio, [:title] do |t, args|
   mkdir_p page
   puts "Creating portfolio index: #{index}"
   write_new_page(index, yml)
+  register_collection title
 end
 
 # usage rake new_draft[my-unpublished-draft] or rake new_draft['my new unpublished draft'] or rake new_draft (defaults to "new-draft")
