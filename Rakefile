@@ -1,6 +1,8 @@
 require "rubygems"
 require "bundler/setup"
 require "stringex"
+require "./plugins/cli_menu_helpers"
+require "./plugins/publisher"
 
 ## -- Rsync Deploy config -- ##
 # Be sure your public key is listed in your server's ~/.ssh/authorized_keys file
@@ -15,8 +17,13 @@ deploy_default = "rsync"
 deploy_branch  = "gh-pages"
 
 ## -- Misc Configs -- ##
-timestamp = Time.now.strftime('%Y-%m-%d %H:%M:%S %z')
-datestamp = Time.now.strftime('%Y-%m-%d')
+def datetimestamp
+  Time.now.strftime('%Y-%m-%d %H:%M:%S %z')
+end
+
+def datestamp
+ Time.now.strftime('%Y-%m-%d')
+end
 
 public_dir      = "public"    # compiled site directory
 source_dir      = "source"    # source file directory
@@ -24,7 +31,7 @@ blog_index_dir  = "source/blog"    # directory for your blog's index page (if yo
 deploy_dir      = "_deploy"   # deploy directory (for Github pages deployment)
 stash_dir       = "_stash"    # directory to stash posts for speedy generation
 posts_dir       = "_posts"    # directory for blog files
-drafts_dir       = "_drafts"    # directory for unpublished blog posts
+drafts_dir      = "_drafts"    # directory for unpublished blog posts
 themes_dir      = ".themes"   # directory for blog files
 new_post_ext    = "markdown"  # default new post file extension when using the new_post task
 new_page_ext    = "markdown"  # default new page file extension when using the new_page task
@@ -183,80 +190,77 @@ task :new_draft, :title do |t, args|
   end
 end
 
-desc "Publish post from #{source_dir}/#{drafts_dir}"
+desc "Publish posts from #{source_dir}/#{drafts_dir} to #{source_dir}/#{posts_dir}"
 task :publish, :title do |t, args|
+  include Publisher
+  args.with_defaults(:title => '')
   @publish_count = 0
-  title = args.title.to_url unless args.title.nil?
-  drafts = Dir.entries("#{source_dir}/#{drafts_dir}").reject! { |file| file =~ /^\./ }
-  match = filter_files(filename: title, list: drafts)
+  config = {
+    source: "#{source_dir}/#{drafts_dir}",
+    destination: "#{source_dir}/#{posts_dir}",
+    front_matter: {
+      date: datetimestamp
+    }
+  }
 
-  draft_list = match.count > 0 ? match : drafts
-  draft_list = to_indexed_hash(draft_list)
-  draft_menu = menuize(draft_list)
-  menu_selection = ask("Drafts waiting to be published:\n" +  draft_menu.join("\n") + "\nEnter item number(s) of draft title(s) to publish:")
+  # Sanitize filename
+  title = args[:title].split(".").map { |x| x.to_url }.join(".").downcase
+  drafts = Dir.entries("#{config[:source]}").reject! { |file| file.start_with? "." }
 
-  # accept answer with multiple selections delimited by space or comma
-  drafts_to_pub = menu_selection.split(/[,\s]/).reject(&:empty?)
+  matches = filter_files(filename: title, list: drafts)
 
-  drafts_to_pub.each do |item|
-    selection = item.to_i
-
-    if draft_list.has_key? selection
-      title = draft_list[selection]
-      draft_file = "#{source_dir}/#{drafts_dir}/#{title}"
-      post_file = "#{source_dir}/#{posts_dir}/#{datestamp}-#{title}"
-
-      unless File.exists?(post_file) and ask("#{title} already exists. Do you want to overwrite?", ['y', 'n']) != 'y'
-        puts "\nPublishing #{title}..."
-        update_yml(file: draft_file, var: "date", value: timestamp)
-        mv "#{draft_file}", "#{post_file}"
-        @publish_count += 1
-      end
-
-    else
-      puts "No draft found for \"#{item}\". Skipping..."
+  if matches.count == 1 and matches[0] == title
+    @publish_count += publish(title, config)
+  else
+    menu_msg = ""
+    menu_msg << "No posts found for \"#{title}\"" if matches.empty?
+    menu_msg << "\nDrafts waiting to be published:"
+    list = matches.empty? ? drafts : matches
+    menu_response = get_menu_selection(list, :message => menu_msg, :verbose => true)
+    menu_response.each do |selection|
+      @publish_count += publish(selection, config)
     end
   end
 
-  puts "\nDone. #{@publish_count} drafts published."
+  puts "\nDone. #{@publish_count} posts published."
 end
 
-desc "Unpublish post from #{source_dir}/#{posts_dir} and move to #{source_dir}/#{drafts_dir}"
+desc "Revert post from #{source_dir}/#{posts_dir} to draft in #{source_dir}/#{drafts_dir}"
 task :unpublish, :title do |t, args|
+  include Publisher
+  args.with_defaults(:title => '')
   @unpublish_count = 0
-  title = args.title.to_url unless args.title.nil?
-  posts = Dir.entries("#{source_dir}/#{posts_dir}").reject! { |file| file =~ /^\./ }
-  match = filter_files(filename: title, list: posts)
+  config = {
+    source: "#{source_dir}/#{posts_dir}",
+    destination: "#{source_dir}/#{drafts_dir}",
+    front_matter: {
+      date: nil
+    }
+  }
 
-  post_list = match.count > 0 ? match : posts
-  post_list = to_indexed_hash(post_list)
-  post_menu = menuize(post_list)
-  menu_selection = ask("Published posts:\n" +  post_menu.join("\n") + "\nEnter item number(s) of post title(s) to unpublish:")
+  # Sanitize filename
+  title = args[:title].split(".").map { |x| x.to_url }.join(".").downcase
+  posts = Dir.entries("#{config[:source]}").reject! { |file|
+    file.start_with? "." }
 
-  # accept multiple selection answer delimited by space or comma
-  posts_to_unpub = menu_selection.split(/[,\s]/).reject(&:empty?)
+  matches = filter_files(filename: title, list: posts)
 
-  posts_to_unpub.each do |item|
-    selection = item.to_i
+  if matches.count == 1 and matches[0] == title
+    @unpublish_count += unpublish(title, config)
+  else
+    menu_msg = ""
+    menu_msg << "No posts found for \"#{title}\"" if matches.empty?
+    menu_msg << "\nPublished posts:"
 
-    if post_list.has_key? selection
-      title = post_list[selection].sub(/\d{4}-\d{2}-\d{2}-/, '')
-      draft_file = "#{source_dir}/#{drafts_dir}/#{title}"
-      post_file = "#{source_dir}/#{posts_dir}/#{datestamp}-#{title}"
+    list = matches.empty? ? posts : matches
+    menu_response = get_menu_selection(list, :message => menu_msg, :verbose => true)
 
-      unless File.exists?(draft_file) and ask("#{title} already exists. Do you want to overwrite?", ['y', 'n']) != 'y'
-        puts "\nReverting #{title} to draft..."
-        update_yml(file: post_file, var: "date")
-        mv "#{post_file}", "#{draft_file}"
-        @unpublish_count += 1
-      end
-
-    else
-      puts "No post found for \"#{item}\". Skipping..."
+    menu_response.each do |selection|
+      @unpublish_count += unpublish(selection, config)
     end
   end
 
-  puts "\nDone. #{@unpublish_count} posts unpublished."
+  puts "\nDone. #{@unpublish_count} posts reverted to draft."
 end
 
 # usage rake isolate[my-post]
@@ -467,82 +471,18 @@ task :setup_github_pages, :repo do |t, args|
   puts "\n---\n## Now you can deploy to #{repo_url} with `rake deploy` ##"
 end
 
-###################
-# Rake Task Helpers #
-###################
 
-def update_yml(args = {})
-  file, var, value = args[:file], args[:var], args[:value]
 
-  if value and not value.empty?
-    updated_var = "\n#{var}: #{value}"
-  else
-    updated_var = ""
-  end
 
-  contents = IO.read(file)
-  yml_regex = /^-{3}.+^-{3}$/m
-  yml = contents.scan(yml_regex).first
 
-  if yml.scan(/#{var}/).empty?
-    return if updated_var.empty?
-    yml.sub!(/^-{3}/, "---#{updated_var}")
-  else
-    yml.gsub!(/^#{var}.*\s/, updated_var)
-  end
 
-  File.open(file, 'w') do |f|
-    f.puts contents.sub(yml_regex, yml)
-  end
-end
 
-def verify_installation(source_dir)
-  raise "### You haven't set anything up yet. First run `rake install` to set up an Octoportfolio theme." unless File.directory?(source_dir)
-end
 
-def menuize(collection)
-  collection.map { |pair| pair.join(" ) ") }
-end
 
-def to_indexed_hash(ary)
-  ary.map.with_index { |elem, i| [i+1, elem] }.to_h
-end
 
-def set_title(args = {})
-  title, doctype = args[:title], args[:doctype]
-  unless title
-    title = get_stdin("Enter a title for your #{doctype}: ")
-    title = "new-#{doctype}" if title.empty?
-  end
-  title
-end
 
-def filter_files(args = {})
-  filename, list = args[:filename], args[:list]
-  matches = list.select { |file| file =~ /#{filename}/ }
-end
 
-def ok_failed(condition)
-  if condition
-    puts "OK"
-  else
-    puts "FAILED"
-  end
-end
 
-def get_stdin(message)
-  print message
-  STDIN.gets.chomp
-end
-
-def ask(message, valid_options = false)
-  if valid_options
-    answer = get_stdin("#{message} #{valid_options.to_s.gsub(/"/, '').gsub(/, /,'/')} ") until valid_options.include?(answer)
-  else
-    answer = get_stdin(message)
-  end
-  answer
-end
 
 def blog_url(user, project, source_dir)
   cname = "#{source_dir}/CNAME"
