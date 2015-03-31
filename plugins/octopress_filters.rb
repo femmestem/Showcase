@@ -15,6 +15,7 @@ module OctopressFilters
       end
     end
   end
+
   def self.post_filter(page)
     if page.ext.match('html|textile|markdown|md|haml|slim|xml')
       page.output = TemplateWrapper::unwrap(page.output)

@@ -51,7 +51,7 @@ task :install, :theme do |t, args|
   end
   # copy theme into working Jekyll directories
   theme = args.theme || 'classic'
-  puts "## Copying "+theme+" theme into ./#{source_dir} and ./sass"
+  puts "## Copying #{theme} theme into ./#{source_dir} and ./sass"
   mkdir_p source_dir
   cp_r "#{themes_dir}/#{theme}/source/.", source_dir
   mkdir_p "sass"
@@ -88,8 +88,8 @@ task :watch do
   [jekyllPid, compassPid].each { |pid| Process.wait(pid) }
 end
 
-# usage: `rake preview` to see published posts or `rake preview[drafts]` to include drafts in preview
-desc "Preview the site in a web browser. Optionally preview site with drafts."
+# usage: rake preview to see published posts or rake preview[drafts] to include drafts in preview
+desc "Preview the site in a web browser (optional: preview site with drafts)"
 task :preview, :drafts do |t, args|
   verify_installation(source_dir)
   puts "Starting to watch source with Jekyll and Compass. Starting Rack on port #{server_port}"
@@ -164,7 +164,7 @@ end
 
 # usage rake new_portfolio[my-new-portfolio] or rake new_portfolio[my-new-portfolio.html] or rake new_portfolio (defaults to "new-portfolio.markdown")
 desc "Create a new portfolio in #{source_dir}/_(title)"
-task :new_portfolio, [:title] do |t, args|
+task :new_portfolio, :title do |t, args|
   include Octoportfolio
   verify_installation(source_dir)
 
