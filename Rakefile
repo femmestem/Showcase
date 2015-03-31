@@ -505,17 +505,6 @@ def verify_installation(source_dir)
   end
 end
 
-def set_title(args = {})
-  title = args[:title]
-  default = args[:default] || "untitled"
-
-  unless title
-    title = get_stdin("Enter a title: ")
-    title = default if title.empty?
-  end
-  title.downcase
-end
-
 def write_new_page(file, front_matter = {})
   unless front_matter.is_a? Hash
     raise ArgumentError, "Invalid front matter format.

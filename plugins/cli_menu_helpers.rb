@@ -29,6 +29,18 @@ def overwrite_confirmed?(file)
   ask("\n\"#{file}\" already exists.\nDo you want to overwrite?", ['y', 'n']) == 'y'
 end
 
+
+def set_title(args = {})
+  title = args[:title]
+  default = args[:default] || "untitled"
+
+  unless title
+    title = get_stdin("Enter a title: ")
+    title = default if title.empty?
+  end
+  title.downcase
+end
+
 def filter_files(args = {})
   keyword = args[:filename].downcase
   list = args[:list]
