@@ -39,12 +39,12 @@ rdiscount:
     - smart
 highlighter: pygments # default python pygments have been replaced by pygments.rb
 
-# ------------------------------ #
-#    Portfolio & Collections     #
-# ------------------------------ #
+# ------------------------------- #
+#    Portfolios & Collections     #
+# ------------------------------- #
 
 # Add key 'portfolio-name:' under 'collections:' to make documents in
-# source/_portfolio-name liquid accessible through {% site.portfolio-name %}
+# source/_portfolio-name Liquid-accessible through {% site.portfolio-name %}
 
 collections:
   portfolio:
