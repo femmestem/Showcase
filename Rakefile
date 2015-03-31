@@ -161,6 +161,34 @@ task :new_page, :filename do |t, args|
   write_new_page(page, yml)
 end
 
+# usage rake new_portfolio[my-new-portfolio] or rake new_portfolio[my-new-portfolio.html] or rake new_portfolio (defaults to "new-portfolio.markdown")
+desc "Create a new portfolio in #{source_dir}/_(title)"
+task :new_portfolio, [:title] do |t, args|
+  verify_installation(source_dir)
+
+  title = set_title(title: args.title, default: "new portfolio")
+  page = "#{source_dir}/_#{title.to_url}"
+  page_alias = "#{source_dir}/#{title.to_url}"
+  index = "#{page}/index.#{new_page_ext}"
+  abort("rake aborted! \"#{page}\" conflicts with existing page \"#{page_alias}/\" when building site") if File.exist? page_alias
+  abort("rake aborted!") if File.exist? index unless overwrite_confirmed? index
+
+  yml = {
+    layout: "portfolio_index",
+    title: "\"#{title.titlecase}\"",
+    projects: "[]",
+    permalink: "/#{title.to_url}/index.html",
+    comments: false,
+    sharing: false,
+    footer: false
+  }
+
+  puts "Creating new portfolio: #{page}"
+  mkdir_p page
+  puts "Creating portfolio index: #{index}"
+  write_new_page(index, yml)
+end
+
 # usage rake new_draft[my-unpublished-draft] or rake new_draft['my new unpublished draft'] or rake new_draft (defaults to "new-draft")
 desc "Begin a new draft post in #{source_dir}/#{drafts_dir}"
 task :new_draft, :title do |t, args|
