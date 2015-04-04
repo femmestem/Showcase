@@ -27,45 +27,47 @@ module Jekyll
 end
 
 module Octoportfolio
+  CONFIG = "_config.yml"
+  REGISTRY = "source/_data/collections_registry.yml"
 
-  def register_collection(collection, options = {})
-    portfolio_title = collection.to_url
+  def register_portfolio(name)
+    name = name.to_url
+    entry = ""
 
-    # config uses whitespace-sensitive syntax
-    portfolio_key = "#{portfolio_title}:".indent(2)
-    output_key = "output: true".indent(4)
-    permalink_key = "permalink: /#{portfolio_title}/:title/".indent(4)
+    # config files have whitespace-sensitive syntax
+    portfolio = "#{name}:".indent(2)
+    output = "output: true".indent(4)
+    permalink = "permalink: /#{name}/:title/".indent(4)
 
-    data = []
-    data << portfolio_key
-    data << output_key
-    data << permalink_key
-    data = data.join("\n")
+    entry << "#{portfolio}\n#{output}\n#{permalink}"
 
-    puts "Registering #{portfolio_title} collection in _config.yml..."
-    update_collection_registry("_config.yml", data: data, title: portfolio_key)
+    puts "Registering \"#{name}\" portfolio in #{CONFIG}..."
+    update_collection_registry(CONFIG, entry: entry, index_key: portfolio)
+
+    puts "Registering \"#{name}\" portfolio in #{REGISTRY}..."
+    update_collection_registry(REGISTRY, entry: portfolio, index_key: portfolio)
+
     puts "done."
   end
 
   def update_collection_registry(file, record = {})
     orig_file = file
     new_file = "#{orig_file}.new"
-    title, data = record[:title], record[:data]
+    index_key, entry = record[:index_key], record[:entry]
     @registry_found = false
     @record_found = false
 
-    # Read line from original file and write into new file
     File.open(new_file, 'w') do |f|
       File.foreach(orig_file) do |li|
         if @registry_found and !@record_found
           unless li.start_with? ''.indent(2)
-            f.puts data
+            f.puts entry
             @record_found = true
           end
         end
 
         @registry_found = true if li.start_with? "collections:"
-        @record_found = true if li.start_with? title
+        @record_found = true if li.start_with? index_key
 
         f.puts li
       end

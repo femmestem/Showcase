@@ -189,7 +189,7 @@ task :new_portfolio, :title do |t, args|
   mkdir_p page
   puts "Creating portfolio index: #{index}"
   write_new_page(index, yml)
-  register_collection title
+  register_portfolio title
 end
 
 # usage rake new_draft[my-unpublished-draft] or rake new_draft['my new unpublished draft'] or rake new_draft (defaults to "new-draft")
