@@ -238,7 +238,7 @@ task :publish, :title do |t, args|
     menu_msg << "No posts found for \"#{title}\"" if matches.empty?
     menu_msg << "\nDrafts waiting to be published:"
     list = matches.empty? ? drafts : matches
-    menu_response = get_menu_selection(list, :message => menu_msg, :verbose => true)
+    menu_response = get_menu_selection(list, :pre_msg => menu_msg, :verbose => true, :allow_multiple => true)
     menu_response.each do |selection|
       @publish_count += publish(selection, config)
     end
@@ -275,7 +275,7 @@ task :unpublish, :title do |t, args|
     menu_msg << "\nPublished posts:"
 
     list = matches.empty? ? posts : matches
-    menu_response = get_menu_selection(list, :message => menu_msg, :verbose => true)
+    menu_response = get_menu_selection(list, :pre_msg => menu_msg, :verbose => true, :allow_multiple => true)
 
     menu_response.each do |selection|
       @unpublish_count += unpublish(selection, config)

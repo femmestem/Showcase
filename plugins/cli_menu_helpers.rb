@@ -55,36 +55,36 @@ end
 
 
 def get_menu_selection(list, options = {})
-  msg = options[:message] || ""
+  pre_msg = options[:pre_msg] || ""
+  post_msg = options[:post_msg] || "Enter menu number(s) of file(s) to update:"
   verbose = options[:verbose] || false
+  allow_multiple = options[:allow_multiple] || false
   selections = []
-  invalid = []
+  valid = []
 
   # convert array to indexed hash for fast parsing of large option set
   list = list.map.with_index { |elem, i| [i+1, elem] }.to_h
   menu_items = list.map { |pair| pair.join(" ) ") }.join("\n")
-  menu = "#{msg}" || ""
-  menu << "\n#{menu_items}"
-  menu << "\nEnter menu number(s) of file(s) to update:"
+  menu = "#{pre_msg}\n#{menu_items}\n#{post_msg}"
 
-  # sanitize response of multiple selections separated by space or comma
+  # sanitize response with multiple selections separated by space or comma
   response = ask(menu).split(/[,\s]/).reject(&:empty?)
 
-  response.each do |selection|
+  if allow_multiple
+    selections = response
+  else
+    selections << response.first
+  end
+
+  selections.each do |selection|
     selection = selection.to_i
     if list.has_key? selection
-      selections <<  list[selection]
+      valid <<  list[selection]
     else
-      invalid << selection
+      puts "No matches for [ #{selection} ]. Skipping..." if verbose
     end
   end
 
-  if verbose
-    invalid.each do |selection|
-      puts "No post found for [ #{selection} ]. Skipping..."
-    end
-  end
-
-  selections
+  valid
 end
 
