@@ -2,36 +2,6 @@ require './plugins/cli_menu_helpers'
 
 module Publisher
 
-  def update_front_matter(args = {})
-    front_matter_keys = args[:front_matter]
-    raise " Expecting :front_matter => { key1: 'a', key2: 'b' }" unless front_matter_keys and front_matter_keys.is_a? Hash
-    file = args[:file]
-    default_front_matter = "---\n---"
-
-    contents = IO.read(file)
-    front_matter_re = /^-{3}.+^-{3}$/m
-    front_matter = contents.scan(front_matter_re).first
-
-    if front_matter.nil?
-      front_matter = default_front_matter
-      contents = "#{front_matter}\n#{contents}"
-    end
-
-    front_matter_keys.each do |key, value|
-      new_key = "\n#{key}: #{value}" unless "#{value}".empty?
-      new_key ||= ""
-      if front_matter.include? "#{key}"
-        front_matter.gsub!(/^#{key}.*\s/, new_key)
-      else
-        front_matter.sub!(/^-{3}/, "---#{new_key}") unless new_key.empty?
-      end
-    end
-
-    File.open(file, 'w') do |f|
-      f.puts contents.sub(front_matter_re, front_matter)
-    end
-  end
-
   def publish(title, config = {})
     count = 0
     yml = config[:front_matter]
@@ -64,6 +34,67 @@ module Publisher
       count += 1
     end
     count
+  end
+
+  def get_front_matter(file)
+    marker_count = 0
+    front_matter = []
+
+    File.foreach (file) do |li|
+      marker_count += 1 if li.chomp == "---"
+
+      if marker_count > 0
+        front_matter << li unless li.chomp == "---"
+      end
+
+      return nil if marker_count == 0
+      return front_matter.join if marker_count >= 2
+    end
+    nil
+  end
+
+  def update_front_matter(args = {})
+    orig_file = args[:file]
+    new_file = "#{orig_file}.new"
+
+    fm_options = args[:front_matter] || {}
+    orig_fm = get_front_matter(orig_file)
+    new_fm = orig_fm || ""
+
+    raise "Invalid front matter format. Expecting :front_matter => { option1: 'a', option2: 'b' }" unless fm_options and fm_options.is_a? Hash
+
+      fm_options.each do |key, value|
+        new_key = "#{key}: #{value}\n" unless "#{value}".empty?
+        new_key ||= ""
+        if orig_fm
+          if new_fm.include? "#{key}"
+            new_fm.gsub!(/^#{key}.*\s/, new_key)
+          else
+            new_fm.sub!('', new_key) unless new_key.empty?
+          end
+        else
+          new_fm += new_key unless new_key.empty?
+        end
+      end
+
+    marker_count = 0
+    File.open(new_file, 'w') do |f|
+      f.puts "---"
+      f.write new_fm
+      f.puts "---"
+      File.foreach(orig_file) do |li|
+        if orig_fm.nil?
+          f.puts li
+        else
+          f.puts li unless marker_count < 2
+          marker_count += 1 if li.chomp == "---"
+        end
+      end
+    end
+
+    File.rename(orig_file, "#{orig_file}.old")
+    File.rename(new_file, orig_file)
+    File.delete("#{orig_file}.old")
   end
 
 end
