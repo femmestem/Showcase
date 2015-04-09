@@ -134,35 +134,41 @@ desc "Create a new page in #{source_dir}/(filename)/index.#{new_page_ext}"
 task :new_page, :filename do |t, args|
   verify_installation(source_dir)
   args.with_defaults(:filename => 'new page')
+  filename = args.filename.downcase
 
-  page_context = get_page_context(file: args.filename, base_dir: source_dir)
-  dir = page_context[:directory]
-  filename = page_context[:filename]
-  ext = page_context[:extension]
-  title = page_context[:basename]
+  page_dir = dirname(filename, source_dir)
+  basename, dot, ext = File.basename(filename).rpartition(".").reject(&:empty?)
+  title, page = basename.titlecase, basename.to_url
 
-  ext ||= new_page_ext
+  unless ext
+    page_dir << "/#{page}"
+    page = "index"
+    ext = new_project_ext
+  end
 
-  page = "#{dir}/#{filename}.#{ext}"
-  dir_root = page.split('/')[1]
+  page_path = "#{page_dir}/#{page}.#{ext}"
+  dir_root = page_path.split('/')[1]
+
+  # check for name conflict with compiled portfolio folders
   page_alias = "_#{dir_root}"
   if Dir.entries(source_dir).include? page_alias
     abort("rake aborted! \"#{source_dir}/#{dir_root}\" name conflict with \"#{source_dir}/#{page_alias}\" on site build")
   end
-  abort("rake aborted!") if File.exist? page unless overwrite_confirmed? page
+
+  abort("rake aborted!") if File.exist? page_path unless overwrite_confirmed? page_path
 
   yml = {
     layout: "page",
-    title: "\"#{title.titlecase}\"",
-    date: datetimestamp,
+    title: "\"#{title}\"",
+    date: "#{datetimestamp}",
     comments: "true",
     sharing: "true",
     footer: "true"
   }
 
-  mkdir_p dir
-  puts "Creating new page: #{page}"
-  write_new_page(page, yml)
+  mkdir_p page_dir
+  puts "Creating new page: #{page_path}"
+  write_new_page(page_path, yml)
 end
 
 # usage rake new_portfolio[my-new-portfolio] or rake new_portfolio[my-new-portfolio.html] or rake new_portfolio (defaults to "new-portfolio.markdown")
@@ -172,10 +178,12 @@ task :new_portfolio, :title do |t, args|
   verify_installation(source_dir)
 
   title = set_title(title: args.title, default: "new portfolio")
-  page = "#{source_dir}/_#{title.to_url}"
-  page_alias = "#{source_dir}/#{title.to_url}"
-  index = "#{page}/index.#{new_page_ext}"
-  abort("rake aborted! \"#{page}\" conflicts with existing page \"#{page_alias}/\" when building site") if File.exist? page_alias
+  portfolio = "#{source_dir}/_#{title.to_url}"
+
+  portfolio_alias = "#{source_dir}/#{title.to_url}"
+  abort("rake aborted! \"#{portfolio}\" conflicts with existing page \"#{portfolio_alias}\" when building site") if File.exist? portfolio_alias
+
+  index = "#{portfolio}/index.#{new_page_ext}"
   abort("rake aborted!") if File.exist? index unless overwrite_confirmed? index
 
   yml = {
@@ -224,7 +232,8 @@ task :publish, :title do |t, args|
     source: "#{source_dir}/#{drafts_dir}",
     destination: "#{source_dir}/#{posts_dir}",
     front_matter: {
-      date: datetimestamp
+      date: "#{datetimestamp}",
+      published: nil
     }
   }
 
@@ -522,35 +531,22 @@ def write_new_page(file, front_matter = {})
     end
 end
 
-def get_page_context(args = {})
-  context = {}
-  file, page_dir = args[:file].downcase, [ args[:base_dir] ]
-  unless file =~ /(^.+\/)?(.+)/
+def dirname(path, base_dir = nil)
+  dir_tree = []
+  dir_tree << base_dir.downcase if base_dir
+
+  unless path =~ /(^.+\/)?(.+)/
     raise "Syntax error: #{file} contains unsupported characters"
   end
-  dir, file = $1, $2
 
-  # Get basename and extension
-  basename, dot, ext = file.rpartition('.').reject(&:empty?)
-  context[:basename] = basename
-  context[:extension] = ext
-
-  unless dir.nil?
+  dir = $1 # captured from regex match
+  if dir
     dir = dir.split('/').reject(&:empty?)
-    page_dir += dir
+    dir_tree += dir
   end
+  dir = dir_tree.map { |d| d && d = d.to_url }.join('/')
 
-  if ext.nil?
-    page_dir << basename
-    basename = "index"
-  end
-
-  # Sanitize page_dir
-  page_dir = page_dir.map { |d| d = d.to_url }.join('/')
-  context[:directory] = page_dir
-  context[:filename] = basename.to_url
-
-  context
+  dir
 end
 
 def blog_url(user, project, source_dir)
