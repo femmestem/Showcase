@@ -193,13 +193,13 @@ task :new_portfolio, :title do |t, args|
     title: "\"#{title.titlecase}\"",
     projects: "[]",
     permalink: "/#{title.to_url}/index.html",
-    comments: false,
-    sharing: false,
-    footer: false
+    comments: "false",
+    sharing: "false",
+    footer: "false"
   }
 
-  puts "Creating new portfolio: #{page}"
-  mkdir_p page
+  puts "Creating new portfolio: #{portfolio}"
+  mkdir_p portfolio
   puts "Creating portfolio index: #{index}"
   write_new_page(index, yml)
   register_portfolio title
