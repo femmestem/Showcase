@@ -133,7 +133,7 @@ end
 desc "Create a new page in #{source_dir}/(filename)/index.#{new_page_ext}"
 task :new_page, :filename do |t, args|
   verify_installation(source_dir)
-  args.with_defaults(:filename => 'new-page')
+  args.with_defaults(:filename => 'new page')
 
   page_context = get_page_context(file: args.filename, base_dir: source_dir)
   dir = page_context[:directory]
@@ -144,8 +144,11 @@ task :new_page, :filename do |t, args|
   ext ||= new_page_ext
 
   page = "#{dir}/#{filename}.#{ext}"
-  page_alias = "#{dir}/_#{filename}.#{ext}" # check for conflict with portfolio of same title as page name
-  abort("rake aborted! \"#{dir}/\" conflicts with existing portfolio \"#{page_alias}/\" when building site") if File.exist? page_alias
+  dir_root = page.split('/')[1]
+  page_alias = "_#{dir_root}"
+  if Dir.entries(source_dir).include? page_alias
+    abort("rake aborted! \"#{source_dir}/#{dir_root}\" name conflict with \"#{source_dir}/#{page_alias}\" on site build")
+  end
   abort("rake aborted!") if File.exist? page unless overwrite_confirmed? page
 
   yml = {
