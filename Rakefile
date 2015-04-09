@@ -34,9 +34,11 @@ deploy_dir      = "_deploy"   # deploy directory (for Github pages deployment)
 stash_dir       = "_stash"    # directory to stash posts for speedy generation
 posts_dir       = "_posts"    # directory for blog files
 drafts_dir      = "_drafts"    # directory for unpublished blog posts
+portfolio_reg   = "_data/collections.yml"   # registry of Jekyll Collection keys for portfolios
 themes_dir      = ".themes"   # directory for blog files
 new_post_ext    = "markdown"  # default new post file extension when using the new_post task
 new_page_ext    = "markdown"  # default new page file extension when using the new_page task
+new_project_ext = "markdown"  # default new project file extension when using the new_project task
 server_port     = "4000"      # port for preview server eg. localhost:4000
 
 if (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) != nil
@@ -201,6 +203,49 @@ task :new_portfolio, :title do |t, args|
   puts "Creating portfolio index: #{index}"
   write_new_page(index, yml)
   register_portfolio title
+end
+
+desc "Create a new project in #{source_dir}/_portfolio/(title)"
+task :new_project, :filename do |t, args|
+  include Octoportfolio
+  verify_installation(source_dir)
+  args.with_defaults(:filename => 'new project')
+  portfolio_list = get_portfolios(source_dir)
+  portfolio = ""
+
+  filename = args.filename.downcase
+  basename, dot, ext = File.basename(filename).partition(".").reject(&:empty?)
+  title, project = basename.titlecase, basename.to_url
+  ext ||= new_project_ext
+
+  portfolio = dirname(filename)
+  if portfolio.empty?
+    before_menu = "Portfolios in registry (#{portfolio_reg}):"
+    after_menu = "In which portfolio does \"#{title}\" project belong? (enter number): "
+    portfolio = get_menu_selection(portfolio_list, :pre_msg => before_menu, :post_msg => after_menu, :verbose => true).first
+  else
+    portfolio = "_#{portfolio}" unless portfolio.start_with? "_"
+    abort("rake aborted! No such portfolio \"#{portfolio}\"") unless portfolio_list.include? portfolio
+  end
+
+  project_path = "#{source_dir}/#{portfolio}/#{project}.#{ext}"
+  abort("rake aborted!") if File.exist? project_path unless overwrite_confirmed? project_path
+
+  gallery_path = "#{source_dir}/images/#{project}"
+  yml = {
+  layout: "project",
+  title: "\"#{title}\"",
+  gallery_path: gallery_path,
+  include_images: "[]",
+  sourcecode: "",
+  demo: "",
+  }
+
+  puts "Creating new project page \"#{project}.#{ext}\" in \"#{portfolio}/\""
+  puts "> #{project_path}"
+  write_new_page(project_path, yml)
+  puts "Creating project image gallery at \"#{gallery_path}\""
+  mkdir_p gallery_path
 end
 
 # usage rake new_draft[my-unpublished-draft] or rake new_draft['my new unpublished draft'] or rake new_draft (defaults to "new-draft")
