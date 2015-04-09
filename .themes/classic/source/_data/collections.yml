@@ -1,0 +1,12 @@
+# Collections registry
+#
+# This registry parsed by 'rake new_project' task
+# to create project templates in correct portfolio folders.
+#
+# If new_project task is sluggish, remove names of old deleted portfolios
+
+collections:
+  portfolio:
+
+# Do not remove this line #
+########### EOF ###########

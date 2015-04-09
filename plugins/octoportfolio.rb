@@ -28,7 +28,7 @@ end
 
 module Octoportfolio
   CONFIG = "_config.yml"
-  REGISTRY = "source/_data/collections_registry.yml"
+  REGISTRY = "source/_data/collections.yml"
 
   def register_portfolio(name)
     name = name.to_url
