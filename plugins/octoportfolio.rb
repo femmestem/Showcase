@@ -30,6 +30,25 @@ module Octoportfolio
   CONFIG = "_config.yml"
   REGISTRY = "source/_data/collections.yml"
 
+  def get_portfolios(source_dir)
+    portfolios = []
+    collections = false
+    source_folders = Dir.entries(source_dir)
+    source_folders.select! { |file| file.start_with? "_" }
+
+    File.foreach(REGISTRY) do |li|
+      collections = true if li.strip == "collections:"
+      if collections && li.start_with?('  ') && li.strip.end_with?(':')
+        portfolios << li.strip.chop
+      end
+    end
+
+    portfolios.map! { |title| "_#{title}"}
+    portfolios.select! { |folder| source_folders.include? folder }
+
+    portfolios
+  end
+
   def register_portfolio(name)
     name = name.to_url
     entry = ""
