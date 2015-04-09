@@ -56,7 +56,7 @@ end
 
 def get_menu_selection(list, options = {})
   pre_msg = options[:pre_msg] || ""
-  post_msg = options[:post_msg] || "Enter menu number(s) of file(s) to update:"
+  post_msg = options[:post_msg] || "Enter menu number(s) of file(s) to update: "
   verbose = options[:verbose] || false
   allow_multiple = options[:allow_multiple] || false
   selections = []

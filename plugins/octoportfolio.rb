@@ -73,20 +73,20 @@ module Octoportfolio
     orig_file = file
     new_file = "#{orig_file}.new"
     index_key, entry = record[:index_key], record[:entry]
-    @registry_found = false
-    @record_found = false
+    registry_found = false
+    record_found = false
 
     File.open(new_file, 'w') do |f|
       File.foreach(orig_file) do |li|
-        if @registry_found and !@record_found
+        if registry_found and !record_found
           unless li.start_with? ''.indent(2)
             f.puts entry
-            @record_found = true
+            record_found = true
           end
         end
 
-        @registry_found = true if li.start_with? "collections:"
-        @record_found = true if li.start_with? index_key
+        registry_found = true if li.start_with? "collections:"
+        record_found = true if li.start_with? index_key
 
         f.puts li
       end
@@ -96,7 +96,7 @@ module Octoportfolio
     File.rename(new_file, orig_file)
     File.delete("#{orig_file}.old")
 
-    unless @registry_found
+    unless registry_found
       collection_registry_error(orig_file, data)
     end
   end
