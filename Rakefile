@@ -91,7 +91,7 @@ task :watch do
 end
 
 # usage: rake preview to see published posts or rake preview[drafts] to include drafts in preview
-desc "Preview the site in a web browser (optional: preview site with drafts)"
+desc "Preview the site in a web browser (\'drafts\' optional)"
 task :preview, :drafts do |t, args|
   verify_installation(source_dir)
   puts "Starting to watch source with Jekyll and Compass. Starting Rack on port #{server_port}"
@@ -205,7 +205,7 @@ task :new_portfolio, :title do |t, args|
   register_portfolio title
 end
 
-desc "Create a new project in #{source_dir}/_portfolio/(title)"
+desc "Create a new project in #{source_dir}/_portfolio/(filename)"
 task :new_project, :filename do |t, args|
   include Octoportfolio
   verify_installation(source_dir)
