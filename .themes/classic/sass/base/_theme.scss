@@ -45,6 +45,7 @@ $sidebar-border-hover: darken($sidebar-bg, 7) !default;
 $sidebar-link-color-subdued: lighten($sidebar-color, 20) !default;
 $sidebar-link-color-subdued-hover: $sidebar-link-color-hover !default;
 
+/* Footer colors */
 $footer-bg: $nav-bg !default;
 $footer-bg-gradient: linear-gradient(lighten($footer-bg, 8), $footer-bg, darken($footer-bg, 11)) !default;
 $footer-color: darken($footer-bg, 25) !default;
@@ -55,8 +56,13 @@ $footer-link-color: darken($footer-color, 20) !default;
 $footer-link-color-hover: darken($footer-color, 40) !default;
 $page-border-bottom: darken($footer-bg, 5) !default;
 
+/* SlickJS Image Slider */
+$slider-bg: rgba(0.165, 0.427, 0.620, 0.80) !default;
+$slider-bg: $main-bg;
+$slider-nav-bg: rgba(0.165, 0.427, 0.620, 0.80);
+$slider-nav-arrow-color: lighten($slider-nav-bg, 60) !default;
 
-/* Core theme application */
+// Core theme application
 
 a {
   @include link-colors($link-color, $hover: $link-color-hover, $focus: $link-color-hover, $visited: $link-color-visited, $active: $link-color-active);
@@ -79,4 +85,15 @@ html {
 #content {
   background: $main-bg;
   border-right: 1px solid $sidebar-border;
+}
+
+.slider-wrapper {
+  background: $slider-bg;
+  button::before, button::after { color: $slider-nav-arrow-color }
+}
+.slider-hero {
+    border: 5px solid $slider-nav-bg;
+}
+.slider-nav {
+    background: $slider-nav-bg;
 }

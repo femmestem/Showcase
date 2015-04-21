@@ -18,6 +18,51 @@ $header-font-size: 1em !default;
 $header-padding-top: 1.5em !default;
 $header-padding-bottom: 1.5em !default;
 
+// SlickJS slide widths used in media queries
+$slide-previewer-width-mobile: 320px !default; 
+$slide-previewer-width-small: 480px !default;
+$slide-previewer-width-medium: 640px !default;
+$slide-previewer-width-wide: 800px !default;
+
+// standard aspect ratios (landscape): 4/3, 16/9
+// standard aspect ratios (portrait): 3/4, 9/16
+// adaptive height: 1
+$slide-previewer-aspect-ratio: 16/9; 
+
+// .slider-wrapper,
+.slider-hero,
+.slider-nav {
+  width: $slide-previewer-width-mobile;
+  max-width: 100%;
+  margin: auto;
+  img { width: 100%; }
+  @media only screen and (min-width: 480px) {
+    width: $slide-previewer-width-small;
+  }
+  @media only screen and (min-width: 768px) {
+    width: $slide-previewer-width-medium;
+  }
+  @media only screen and (min-width: 992px) {
+    width: $slide-previewer-width-wide;
+  }
+}
+.slider-hero {
+  max-height: $slide-previewer-width-mobile/$slide-previewer-aspect-ratio;
+  overflow: hidden;
+  @media only screen and (min-width: 480px) {
+    max-height: $slide-previewer-width-small/$slide-previewer-aspect-ratio;
+  }
+  @media only screen and (min-width: 768px) {
+    max-height: $slide-previewer-width-medium/$slide-previewer-aspect-ratio;
+  }
+  @media only screen and (min-width: 992px) {
+    max-height: $slide-previewer-width-wide/$slide-previewer-aspect-ratio;
+  }
+}
+.slider-nav {
+  .slick-slide { padding: 1em .25em 1em .25em; }
+}
+
 .group { @include pie-clearfix; }
 
 @mixin collapse-sidebar {
@@ -48,7 +93,7 @@ body {
   max-width: $max-width;
   position: relative;
   margin: 0 auto;
-  > header, > nav, > footer, #content > article, #content > div > article, #content > div > section {
+  > header, > nav, > footer, #content > article, #content > div > article, #content > div > section, #project-title, #project-description {
     @extend .group;
     padding-left: $pad-min;
     padding-right: $pad-min;
