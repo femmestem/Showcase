@@ -1,0 +1,27 @@
+---
+layout: default
+---
+{% if page.title %}<h1 id="project-title">{{ page.title }}</h1>{% endif %}
+{% unless page.gallery_path.size == 0 or page.include_images.size == 0 %}
+<div class="slider-wrapper">
+  <div class="slider-hero">
+    {% for img_name in page.include_images %}
+    {% capture img_path %}{{ page.gallery_path }}/{{ img_name }}{% endcapture %}
+    <div>
+      <img src="{{ img_path }}" alt="project demonstration image slide" />
+    </div>
+    {% endfor %}
+    </div>
+  <div class="slider-nav">
+    {% for img_name in page.include_images %}
+    {% capture img_path %}{{ page.gallery_path }}/{{ img_name }}{% endcapture %}
+    <div>
+      <img src="{{ img_path }}" alt="project demonstration image slide" />
+    </div>
+    {% endfor %}
+    </div>
+</div>
+{% endunless %}
+<section id="project-description">
+  {{ content }}
+</section>
