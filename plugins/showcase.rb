@@ -26,7 +26,7 @@ module Jekyll
   end
 end
 
-module Octoportfolio
+module Showcase
   CONFIG = "_config.yml"
   REGISTRY = "source/_data/collections.yml"
 

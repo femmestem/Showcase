@@ -4,7 +4,7 @@ require "stringex"
 require "./plugins/titlecase"
 require "./plugins/cli_menu_helpers"
 require "./plugins/publisher"
-require "./plugins/octoportfolio"
+require "./plugins/showcase"
 
 ## -- Rsync Deploy config -- ##
 # Be sure your public key is listed in your server's ~/.ssh/authorized_keys file
@@ -46,7 +46,7 @@ if (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) != nil
   `chcp 65001`
 end
 
-desc "Initial setup for Octoportfolio: copies the default theme into the path of Jekyll's generator. Rake install defaults to rake install[classic] to install a different theme run rake install[some_theme_name]"
+desc "Initial setup for Showcase: copies the default theme into the path of Jekyll's generator. Rake install defaults to rake install[classic] to install a different theme run rake install[some_theme_name]"
 task :install, :theme do |t, args|
   if File.directory?(source_dir) || File.directory?("sass")
     abort("rake aborted!") unless ask("A theme is already installed, proceeding will overwrite existing files. Are you sure?", ['y', 'n']) == 'y'
@@ -98,7 +98,7 @@ task :preview, :drafts do |t, args|
   system "compass compile --css-dir #{source_dir}/stylesheets" unless File.exist?("#{source_dir}/stylesheets/screen.css")
   build_type = "jekyll build --watch"
   build_type << " --drafts" if args.drafts && args.drafts[/^draft/]
-  jekyllPid = Process.spawn({"Octoportfolio_ENV"=>"preview"}, "#{build_type}")
+  jekyllPid = Process.spawn({"Showcase_ENV"=>"preview"}, "#{build_type}")
   compassPid = Process.spawn("compass watch")
   rackupPid = Process.spawn("rackup --port #{server_port}")
 
@@ -176,7 +176,7 @@ end
 # usage rake new_portfolio[my-new-portfolio] or rake new_portfolio[my-new-portfolio.html] or rake new_portfolio (defaults to "new-portfolio.markdown")
 desc "Create a new portfolio in #{source_dir}/_(title)"
 task :new_portfolio, :title do |t, args|
-  include Octoportfolio
+  include Showcase
   verify_installation(source_dir)
 
   title = set_title(title: args.title, default: "new portfolio")
@@ -207,7 +207,7 @@ end
 
 desc "Create a new project in #{source_dir}/_portfolio/(filename)"
 task :new_project, :filename do |t, args|
-  include Octoportfolio
+  include Showcase
   verify_installation(source_dir)
   args.with_defaults(:filename => 'new project')
   portfolio_list = get_portfolios(source_dir)
@@ -507,9 +507,9 @@ task :setup_github_pages, :repo do |t, args|
   end
   branch = (repo_url.match(/\/[\w-]+\.github\.(?:io|com)/).nil?) ? 'gh-pages' : 'master'
   project = (branch == 'gh-pages') ? repo_url.match(/([^\/]+?)(\.git|$)/i)[1] : ''
-  unless (`git remote -v` =~ /origin.+?octoportfolio(?:\.git)?/).nil?
-    # If octoportfolio is still the origin remote (from cloning) rename it to octoportfolio
-    system "git remote rename origin octoportfolio"
+  unless (`git remote -v` =~ /origin.+?showcase(?:\.git)?/).nil?
+    # If showcase is still the origin remote (from cloning) rename it to showcase
+    system "git remote rename origin showcase"
     if branch == 'master'
       # If this is a user/organization pages repository, add the correct origin remote
       # and checkout the source branch for committing changes to the blog source.
@@ -535,9 +535,9 @@ task :setup_github_pages, :repo do |t, args|
   mkdir deploy_dir
   cd "#{deploy_dir}" do
     system "git init"
-    system 'echo "My Octoportfolio Page is coming soon &hellip;" > index.html'
+    system 'echo "My Showcase Page is coming soon &hellip;" > index.html'
     system "git add ."
-    system "git commit -m \"Octoportfolio init\""
+    system "git commit -m \"Showcase init\""
     system "git branch -m gh-pages" unless branch == 'master'
     system "git remote add origin #{repo_url}"
     rakefile = IO.read(__FILE__)
@@ -558,7 +558,7 @@ end
 def verify_installation(source_dir)
   unless File.directory?(source_dir)
     raise "### You haven't set anything up yet.
-    First run 'rake install' to set up an Octoportfolio theme."
+    First run 'rake install' to set up an Showcase theme."
   end
 end
 
