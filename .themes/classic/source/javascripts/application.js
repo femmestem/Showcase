@@ -96,6 +96,27 @@ function wrapFlashVideos() {
   $('iframe[src*=vimeo],iframe[src*=youtube]').wrap('<div class="flash-video">')
 }
 
+// Slick Carousel settings for image sliders
+// http://kenwheeler.github.io/slick/#settings
+function setUpSlick(){
+    $('.slider-hero').slick({
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: false,
+        fade: true,
+        asNavFor: '.slider-nav'
+    });
+    $('.slider-nav').slick({
+        slidesToShow: 3,
+        slidesToScroll: 1,
+        asNavFor: '.slider-hero',
+        dots: false,
+        centerMode: true,
+        focusOnSelect: true,
+        accessibility: true
+    });
+}
+
 function renderDeliciousLinks(items) {
   var output = "<ul>";
   for (var i=0,l=items.length; i<l; i++) {
@@ -112,6 +133,7 @@ $('document').ready(function() {
   addCodeLineNumbers();
   getNav();
   addSidebarToggler();
+  setUpSlick();
 });
 
 // iOS scaling bug fix
