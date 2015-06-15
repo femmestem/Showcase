@@ -2,26 +2,38 @@
 layout: default
 ---
 {% if page.title %}<h1 id="project-title">{{ page.title }}</h1>{% endif %}
-{% unless page.gallery_path.size == 0 or page.include_images.size == 0 %}
+{% if page.gallery_path.size > 0 or page.include_images.size > 0 %}
 <div class="slider-wrapper">
   <div class="slider-hero">
     {% for img_name in page.include_images %}
-    {% capture img_path %}{{ page.gallery_path }}/{{ img_name }}{% endcapture %}
+        {% capture img_path %}
+            {% if img_name contains ":" %}
+            {{ img_name }}
+            {% else %}
+            {{ page.gallery_path }}{{ img_name }}
+            {% endif %}
+        {% endcapture %}
     <div>
-      <img src="{{ img_path }}" alt="project demonstration image slide" />
+      <img src="{{ img_path }}" alt="project demo image-slide" />
     </div>
     {% endfor %}
     </div>
   <div class="slider-nav">
     {% for img_name in page.include_images %}
-    {% capture img_path %}{{ page.gallery_path }}/{{ img_name }}{% endcapture %}
+        {% capture img_path %}
+            {% if img_name contains ":" %}
+            {{ img_name }}
+            {% else %}
+            {{ page.gallery_path }}{{ img_name }}
+            {% endif %}
+        {% endcapture %}
     <div>
-      <img src="{{ img_path }}" alt="project demonstration image slide" />
+      <img src="{{ img_path }}" alt="project demo image-slide" />
     </div>
     {% endfor %}
     </div>
 </div>
-{% endunless %}
+{% endif %}
 <section id="project-description">
   {{ content }}
 </section>
