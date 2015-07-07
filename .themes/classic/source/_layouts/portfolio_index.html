@@ -8,11 +8,42 @@ layout: default
 {% for project in site[page.collection] %}
 {% assign title = project.basename_without_ext %}
 {% if page.projects contains title %}
-<div class="projects" id="{{ title }}">
-    <h2><a href="{{ project.url }}">{{ project.title }}</a></h2>
-    <p>Project url: {{ project.url }} </p>
-    <button><a href="{{ project.sourcecode }}">Source Code</a></button>
-    <button><a href="{{ project.demo }}">Demo</a></button>
+<div class="project album-cover-block" id="{{ title }}">
+    <div class="album-cover-img">   
+    </div>
+    <div class="album-cover-desc">
+        {% if project.site %}
+        <div class="external-link-launcher">
+        <a target="_blank" href="{{ project.site }}">
+            <i class="fa fa-external-link fa-lg"></i>
+        </a>
+        </div>
+        {% endif %}
+        <a href="{{ project.url }}">
+        <h2>{{ project.title }}</h2>
+        {% if project.subtitle %}
+        <h3>// {{ project.subtitle }}</h3>
+        {% endif %}
+        </a>
+    </div>
+    <div class="album-cover-ext">
+        {% if project.github %}
+        <a target="_blank" href="{{ project.github }}">
+            <li>
+                <i class="fa fa-github-square fa-lg fa-fw"></i>
+                GitHub
+            </li>
+        </a>
+        {% endif %}
+        {% if project.bitbucket %}
+        <a target="_blank" href="{{ project.bitbucket }}">
+            <li>
+                <i class="fa fa-bitbucket fa-lg fa-fw"></i>
+                BitBucket                    
+            </li>
+        </a>
+        {% endif %}
+    </div>
 </div>
 {% endif %}
 {% endfor %}

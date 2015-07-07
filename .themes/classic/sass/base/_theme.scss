@@ -72,6 +72,15 @@ $slider-bg: $main-bg !default;
 $slider-nav-bg: rgba(0.165, 0.427, 0.620, 0.80) !default;
 $slider-nav-arrow-color: lighten($slider-nav-bg, 60) !default;
 
+/* Portfolio Index - Project Album Covers */
+// Background Colors
+$project-album-cover-bg: #FFF !default;
+$album-cover-footer-bg: #F2F2F2 !default;
+
+// Font Colors
+$project-album-subtitle-color: #999 !default;
+
+
 /* Core theme application */
 
 a {
