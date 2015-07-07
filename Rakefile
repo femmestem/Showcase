@@ -195,7 +195,8 @@ task :new_portfolio, :title do |t, args|
     permalink: "/#{title.to_url}/index.html",
     comments: "false",
     sharing: "false",
-    footer: "false"
+    footer: "false",
+    sidebar: "false"
   }
 
   puts "Creating new portfolio: #{portfolio}"
@@ -231,14 +232,15 @@ task :new_project, :filename do |t, args|
   project_path = "#{source_dir}/#{portfolio}/#{project}.#{ext}"
   abort("rake aborted!") if File.exist? project_path unless overwrite_confirmed? project_path
 
-  gallery_path = "#{source_dir}/images/#{project}"
+  gallery_path = "../../images/#{project}/"
   yml = {
   layout: "project",
   title: "\"#{title}\"",
-  gallery_path: gallery_path,
+  gallery_path: "#{gallery_path}",
   include_images: "[]",
-  sourcecode: "",
-  demo: "",
+  site: "",
+  github: "",
+  bitbucket: ""
   }
 
   puts "Creating new project page \"#{project}.#{ext}\" in \"#{portfolio}/\""
