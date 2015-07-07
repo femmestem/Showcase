@@ -49,7 +49,7 @@ Documentation coming soon!
 
 Much of the site, blog, and deployment configurations are covered in the guides and documentation at [Octopress.org](http://octopress.org/docs), as this site is a portfolio-centric expansion of the Octopress 2.0 framework. Additional features are listed below.
 
-Portfolio support is based on Jekyll Collections, an experimental feature introduced in Jekyll 2.0. The `new_portfolio` and `new_project` rake tasks set up collections for you, but if you want to peek under the hood, check out [Jekyll Collections](http://jekyllrb.com/docs/collections/).
+Portfolio features are based on Jekyll Collections, an experimental feature introduced in Jekyll 2.0. The `new_portfolio` and `new_project` rake tasks set up collections for you, but if you want to peek under the hood, check out [Jekyll Collections](http://jekyllrb.com/docs/collections/).
 
 ### Some of the Rake tasks available to you:
 
