@@ -21,6 +21,7 @@ Want to showcase your design skills in a separate portfolio from your site build
 ## Quickstart
 
 **Requires:**
+
 1. Ruby > 1.9.3
 2. [Git](http://git-scm.com/)
 3. An ExecJS supported JavaScript runtime ([see list](https://github.com/sstephenson/execjs))
