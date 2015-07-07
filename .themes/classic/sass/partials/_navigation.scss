@@ -36,6 +36,7 @@ body > nav {
     select{ width: 100%; font-size: .8em; border: 1px solid #888;}
   }
   ul { display: none; }
+  
   @media only screen and (min-width: 550px) {
     font-size: .9em;
     ul {
@@ -134,4 +135,3 @@ body > nav {
   a[rel=subscribe-rss]{ @include mask-subscription-nav('rss.png'); }
   a[rel=subscribe-email]{ @include mask-subscription-nav('email.png'); }
 }
-

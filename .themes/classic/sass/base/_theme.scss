@@ -1,31 +1,34 @@
+/* Main Background Images */
 $noise-bg: image-url('noise.png') top left !default;
 $img-border: inline-image('dotted-border.png') !default;
 
-// Main Link Colors
+
+/* Main Link */
+// Font Colors
 $link-color: lighten(#165b94, 3) !default;
 $link-color-hover: adjust-color($link-color, $lightness: 10, $saturation: 25) !default;
 $link-color-visited: adjust-color($link-color, $hue: 80, $lightness: -4) !default;
 $link-color-active: adjust-color($link-color-hover, $lightness: -15) !default;
 
-// Main Section Colors
+/* Main Section */
+// Background Colors
 $main-bg: #f8f8f8 !default;
 $page-bg: #222 !default;
 $article-border: #eeeeee !default;
-
+$type-border: #ddd !default;
 $header-bg: image-url('footer_lodyas.png') top left !default;
 $header-border: lighten(#333, 15) !default;
+
+// Font Colors
 $title-color: #f2f2f2 !default;
 $subtitle-color: #aaa !default;
-
 $text-color: #222 !default;
 $text-color-light: #aaa !default;
-$type-border: #ddd !default;
 
 /* Navigation */
+// Background Colors
 $nav-bg: #aaa !default;
 $nav-bg-gradient: linear-gradient(lighten($nav-bg, 8), $nav-bg, darken($nav-bg, 11)) !default;
-$nav-color: darken($nav-bg, 30) !default;
-$nav-color-hover: darken($nav-color, 10) !default;
 $nav-placeholder: desaturate(darken($nav-bg, 10), 15) !default;
 $nav-border: darken($nav-bg, 10) !default;
 $nav-border-top: lighten($nav-bg, 15) !default;
@@ -34,18 +37,25 @@ $nav-border-left: darken($nav-bg, 11) !default;
 $nav-border-right: lighten($nav-bg, 7) !default;
 $search-bg: #f8f8f8 !default;
 
-/* Sidebar colors */
+// Font Colors
+$nav-color: darken($nav-bg, 30) !default;
+$nav-color-hover: darken($nav-color, 10) !default;
+
+/* Sidebar Colors */
+// Background Colors
 $sidebar-bg: darken($main-bg, 5) !default;
+$sidebar-border: desaturate(darken($sidebar-bg, 7), 10) !default;
+$sidebar-border-hover: darken($sidebar-bg, 7) !default;
+
+// Font Colors
+$sidebar-color: change-color(mix($text-color, $sidebar-bg, 80), $hue: hue($sidebar-bg), $saturation: saturation($sidebar-bg)/2) !default;
 $sidebar-link-color: $text-color !default;
 $sidebar-link-color-hover: $link-color-hover !default;
 $sidebar-link-color-active: $link-color-active !default;
-$sidebar-color: change-color(mix($text-color, $sidebar-bg, 80), $hue: hue($sidebar-bg), $saturation: saturation($sidebar-bg)/2) !default;
-$sidebar-border: desaturate(darken($sidebar-bg, 7), 10) !default;
-$sidebar-border-hover: darken($sidebar-bg, 7) !default;
 $sidebar-link-color-subdued: lighten($sidebar-color, 20) !default;
 $sidebar-link-color-subdued-hover: $sidebar-link-color-hover !default;
 
-/* Footer colors */
+/* Footer Colors */
 $footer-bg: $nav-bg !default;
 $footer-bg-gradient: linear-gradient(lighten($footer-bg, 8), $footer-bg, darken($footer-bg, 11)) !default;
 $footer-color: darken($footer-bg, 25) !default;
@@ -56,13 +66,13 @@ $footer-link-color: darken($footer-color, 20) !default;
 $footer-link-color-hover: darken($footer-color, 40) !default;
 $page-border-bottom: darken($footer-bg, 5) !default;
 
-/* SlickJS Image Slider */
-$slider-bg: rgba(0.165, 0.427, 0.620, 0.80) !default;
-$slider-bg: $main-bg;
-$slider-nav-bg: rgba(0.165, 0.427, 0.620, 0.80);
+/* Image Slider */
+// Background Colors
+$slider-bg: $main-bg !default;
+$slider-nav-bg: rgba(0.165, 0.427, 0.620, 0.80) !default;
 $slider-nav-arrow-color: lighten($slider-nav-bg, 60) !default;
 
-// Core theme application
+/* Core theme application */
 
 a {
   @include link-colors($link-color, $hover: $link-color-hover, $focus: $link-color-hover, $visited: $link-color-visited, $active: $link-color-active);
