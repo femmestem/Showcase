@@ -1,0 +1,92 @@
+// Slider slide image widths used in media queries
+$slide-previewer-width-mobile: 320px !default; 
+$slide-previewer-width-small: 480px !default;
+$slide-previewer-width-medium: 640px !default;
+$slide-previewer-width-wide: 768px !default;
+
+// Slider image aspect ratio for main slide
+// standard aspect ratios (landscape): 4/3, 16/9
+// standard aspect ratios (portrait): 3/4, 9/16
+// adaptive height: 1
+$slide-previewer-aspect-ratio: 16/9 !default; 
+
+.slider-wrapper, .slider-nav { background: $slider-nav-bg; }
+
+#content > .slider-wrapper {
+    width: 100%;
+    @include pie-clearfix;
+    float: none;
+    margin-bottom: 1em;
+    padding: 0;
+    button::before, button::after { color: $slider-nav-arrow-color }
+    @media only screen and (min-width: 360px) {
+      margin: 1em auto;
+    }
+    @media only screen and (min-width: 640px) {
+      width: 91%;
+    }
+    .slider-hero,
+    .slider-nav {
+      float: none;
+      width: $slide-previewer-width-mobile;
+      margin: 0 auto;
+      img { width: 100%; }
+      @media only screen and (min-width: 480px) {
+        width: 100%;
+        max-width: $slide-previewer-width-small;
+      }
+      @media only screen and (min-width: 768px) {
+        width: 100%;
+        max-width: $slide-previewer-width-medium;
+      }
+      @media only screen and (min-width: 992px) {
+        width: 100%;
+        max-width: $slide-previewer-width-wide;
+      }
+    }
+    .slider-hero {
+        border: 5px solid $slider-nav-bg;
+        max-height: $slide-previewer-width-mobile/$slide-previewer-aspect-ratio;
+        overflow: hidden;
+        @media only screen and (min-width: 480px) {
+        max-height: $slide-previewer-width-small/$slide-previewer-aspect-ratio;
+        }
+        @media only screen and (min-width: 768px) {
+        max-height: $slide-previewer-width-medium/$slide-previewer-aspect-ratio;
+        }
+        @media only screen and (min-width: 992px) {
+        max-height: $slide-previewer-width-wide/$slide-previewer-aspect-ratio;
+        }
+    }
+}
+.slider-nav {
+  .slick-slide { padding: 1em .25em 1em .25em; }
+}
+
+/* Sidebar Disabled - Increase Slider Size */
+
+@media only screen and (min-width: 768px) {
+    .no-sidebar {
+        .slider-wrapper,
+        .slider-hero,
+        .slider-nav {
+            width: $slide-previewer-width-medium * 1.25;
+        }
+        .slider-hero {
+            max-height: ($slide-previewer-width-medium * 1.25)/$slide-previewer-aspect-ratio;
+        }
+    }
+}
+
+@media only screen and (min-width: 992px) {
+    .no-sidebar {
+        .slider-wrapper,
+        .slider-hero,
+        .slider-nav {
+            width: $slide-previewer-width-wide * 1.25;
+        }
+        .slider-hero {
+            max-height: ($slide-previewer-width-wide * 1.25)/$slide-previewer-aspect-ratio;
+        }
+    }
+}

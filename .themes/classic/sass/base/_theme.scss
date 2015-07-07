@@ -86,14 +86,3 @@ html {
   background: $main-bg;
   border-right: 1px solid $sidebar-border;
 }
-
-.slider-wrapper {
-  background: $slider-bg;
-  button::before, button::after { color: $slider-nav-arrow-color }
-}
-.slider-hero {
-    border: 5px solid $slider-nav-bg;
-}
-.slider-nav {
-    background: $slider-nav-bg;
-}
