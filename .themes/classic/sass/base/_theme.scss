@@ -3,15 +3,15 @@ $noise-bg: image-url('noise.png') top left !default;
 $img-border: inline-image('dotted-border.png') !default;
 
 
-/* Main Link */
-// Font Colors
+/* Main Link Colors */
+// Font
 $link-color: lighten(#165b94, 3) !default;
 $link-color-hover: adjust-color($link-color, $lightness: 10, $saturation: 25) !default;
 $link-color-visited: adjust-color($link-color, $hue: 80, $lightness: -4) !default;
 $link-color-active: adjust-color($link-color-hover, $lightness: -15) !default;
 
-/* Main Section */
-// Background Colors
+/* Main Section Colors */
+// Background
 $main-bg: #f8f8f8 !default;
 $page-bg: #222 !default;
 $article-border: #eeeeee !default;
@@ -19,14 +19,14 @@ $type-border: #ddd !default;
 $header-bg: image-url('footer_lodyas.png') top left !default;
 $header-border: lighten(#333, 15) !default;
 
-// Font Colors
+// Font
 $title-color: #f2f2f2 !default;
 $subtitle-color: #aaa !default;
 $text-color: #222 !default;
 $text-color-light: #aaa !default;
 
-/* Navigation */
-// Background Colors
+/* Navigation Colors */
+// Background
 $nav-bg: #aaa !default;
 $nav-bg-gradient: linear-gradient(lighten($nav-bg, 8), $nav-bg, darken($nav-bg, 11)) !default;
 $nav-placeholder: desaturate(darken($nav-bg, 10), 15) !default;
@@ -37,17 +37,17 @@ $nav-border-left: darken($nav-bg, 11) !default;
 $nav-border-right: lighten($nav-bg, 7) !default;
 $search-bg: #f8f8f8 !default;
 
-// Font Colors
+// Font
 $nav-color: darken($nav-bg, 30) !default;
 $nav-color-hover: darken($nav-color, 10) !default;
 
 /* Sidebar Colors */
-// Background Colors
+// Background
 $sidebar-bg: darken($main-bg, 5) !default;
 $sidebar-border: desaturate(darken($sidebar-bg, 7), 10) !default;
 $sidebar-border-hover: darken($sidebar-bg, 7) !default;
 
-// Font Colors
+// Font
 $sidebar-color: change-color(mix($text-color, $sidebar-bg, 80), $hue: hue($sidebar-bg), $saturation: saturation($sidebar-bg)/2) !default;
 $sidebar-link-color: $text-color !default;
 $sidebar-link-color-hover: $link-color-hover !default;
@@ -67,7 +67,7 @@ $footer-link-color-hover: darken($footer-color, 40) !default;
 $page-border-bottom: darken($footer-bg, 5) !default;
 
 /* Image Slider */
-// Background Colors
+// Background
 $slider-bg: $main-bg !default;
 $slider-nav-bg: rgba(0.165, 0.427, 0.620, 0.80) !default;
 $slider-nav-arrow-color: lighten($slider-nav-bg, 60) !default;
@@ -79,12 +79,12 @@ $slider-nav-arrow-color: lighten($slider-nav-bg, 60) !default;
 $slide-previewer-aspect-ratio: 16/9 !default; 
 
 /* Portfolio Index - Project Album Covers */
-// Background Colors
-$project-album-cover-bg: #FFF !default;
-$album-cover-footer-bg: #F2F2F2 !default;
+// Background
+$project-cover-bg: #FFF !default;
+$project-cover-footer-bg: #F2F2F2 !default;
 
-// Font Colors
-$project-album-subtitle-color: #999 !default;
+// Font
+$project-cover-subtitle-color: #999 !default;
 
 
 /* Core theme application */
