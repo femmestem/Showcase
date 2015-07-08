@@ -43,21 +43,6 @@ $header-padding-bottom: 1.5em !default;
   }
 }
 
-button {
-    @include border-radius(1em);
-    padding: 1em;
-}
-
-.btn-lg {
-    display: block;
-    width: 97%;
-}
-
-.btn-med {
-    display: inline-block;
-    width: 48%;
-}
-
 body {
   -webkit-text-size-adjust: none;
   max-width: $max-width;
