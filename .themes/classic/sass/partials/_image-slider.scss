@@ -13,12 +13,15 @@ $slide-previewer-aspect-ratio: 16/9 !default;
 .slider-wrapper, .slider-nav { background: $slider-nav-bg; }
 
 #content > .slider-wrapper {
-    width: 100%;
     @include pie-clearfix;
+    width: 100%;
     float: none;
     margin-bottom: 1em;
     padding: 0;
-    button::before, button::after { color: $slider-nav-arrow-color }
+    button::before,
+    button::after {
+        color: $slider-arrow-color;
+    }
     @media only screen and (min-width: 360px) {
       margin: 1em auto;
     }
