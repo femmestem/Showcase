@@ -1,11 +1,11 @@
 body {
     #content > .project-cover-block {
         @include pie-clearfix;
-        width: 30%;
+        width: 90%;
         display: inline-block;
-        padding: 0;
         vertical-align: top;
-        margin: 1em;
+        margin: 0 0 1.5em 5%;
+        padding: 0;
         background: $project-cover-bg;
         border: 1px solid #e2e2e2;
         border-radius: .25em;
@@ -14,7 +14,12 @@ body {
             border-radius: .25em .25em 0 0;
             border-bottom: 1px solid #e2e2e2;
             width: 100%;
-            height: 202px;
+        }
+        .project-cover-img:after {
+            /* 16:9 aspect ratio */
+            padding-top: (9/16) * 100%;
+            display: block;
+            content: '';
         }
         .project-cover-desc {
             width: 90%;
@@ -36,7 +41,10 @@ body {
             a, a:visited {
                 text-decoration: none;
                 &:hover {
-                    h2 { color: $link-color-hover; }
+                    h2 {
+                        color: $link-color-hover;
+                        @include transition(color .3s);
+                    }
                     h3 {
                         color: adjust-color($project-cover-subtitle-color, $lightness: 15, $saturation: 0);
                         @include transition(color .3s);
@@ -76,3 +84,17 @@ body {
     }
 }
 
+body {
+    #content > .project-cover-block {
+        @media only screen and (min-width: 550px) {
+            width: 45%;
+            margin: 0 0 1.5em 3.3%;
+
+        }
+        @media only screen and (min-width: 768px) {
+            width: 30%;
+            max-width: 360px;
+            margin: 0 0 1.5em 2.5%;
+        }
+    }
+}
