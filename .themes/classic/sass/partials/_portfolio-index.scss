@@ -14,8 +14,16 @@ body {
             border-radius: .25em .25em 0 0;
             border-bottom: 1px solid #e2e2e2;
             width: 100%;
+            position: relative;
+            overflow: hidden;
+            img {
+                width: 100%;
+                height: auto;
+                position: absolute;
+                top: 0;
+            }
         }
-        .project-cover-img:after {
+        .project-cover-img:before {
             /* 16:9 aspect ratio */
             padding-top: (9/16) * 100%;
             display: block;

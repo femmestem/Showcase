@@ -238,6 +238,7 @@ task :new_project, :filename do |t, args|
   title: "\"#{title}\"",
   gallery_path: "#{gallery_path}",
   include_images: "[]",
+  cover_image_path: "",
   site: "",
   github: "",
   bitbucket: ""
