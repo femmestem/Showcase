@@ -9,11 +9,13 @@ layout: default
 {% assign title = project.basename_without_ext %}
 {% if page.projects contains title %}
 <div class="project project-cover-block" id="{{ title }}">
+    <a href="{{ project.url }}"> 
     <div class="project-cover-img"> 
     {% if project.cover_image_path %}  
         <img src="{{ project.cover_image_path }}" alt="Project cover image" />
     {% endif %}
     </div>
+    </a>
     <div class="project-cover-desc">
         {% if project.site %}
         <div class="external-link-launcher">
