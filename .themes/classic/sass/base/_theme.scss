@@ -28,6 +28,7 @@ $text-color-light: #aaa !default;
 /* Navigation Colors */
 // Background
 $nav-bg: #aaa !default;
+$nav-color: #f3f2f1 !default;
 $nav-bg-gradient: linear-gradient(lighten($nav-bg, 8), $nav-bg, darken($nav-bg, 11)) !default;
 $nav-placeholder: desaturate(darken($nav-bg, 10), 15) !default;
 $nav-border: darken($nav-bg, 10) !default;
@@ -38,7 +39,7 @@ $nav-border-right: lighten($nav-bg, 7) !default;
 $search-bg: #f8f8f8 !default;
 
 // Font
-$nav-color: darken($nav-bg, 30) !default;
+$nav-color: darken($nav-bg, 30);
 $nav-color-hover: darken($nav-color, 10) !default;
 
 /* Sidebar Colors */

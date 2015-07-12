@@ -20,6 +20,15 @@ $header-padding-bottom: 1.5em !default;
 
 .group { @include pie-clearfix; }
 
+.hidden { display: none; }
+
+.offscreen {
+     position: absolute;
+     left: -999em;
+     overflow: hidden;
+     width: 1em;
+}
+
 @mixin collapse-sidebar {
   float: none;
   width: auto;
