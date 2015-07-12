@@ -14,6 +14,23 @@ body > nav {
         right: 0;
         bottom: .35em;
     }
+    // JS enabled - show collapsible nav menu
+    // JS disabled - show expanded nav menu
+    .nav-js {
+        ul {
+            position: absolute;
+            left: -999em;
+            width: 1em;
+            overflow: hidden;
+        }
+        &.expanded {
+            ul {
+                position: relative;
+                left: 0;
+                width: 100%;
+                overflow: visible;
+            }
+        }
     }
     .nav-menu h3 {
         margin: 0;
