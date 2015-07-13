@@ -4,7 +4,6 @@ require 'octopress-hooks'
 require 'jekyll-sitemap'
 require 'octopress-date-format'
 require './plugins/raw'
-require 'rubypants'
 
 module OctopressFilters
   def self.pre_filter(page)
@@ -21,7 +20,7 @@ module OctopressFilters
       page.output = TemplateWrapper::unwrap(page.output)
     end
 
-    page.output = RubyPants.new(page.output).to_html
+    page.output
   end
 
   class PageFilters < Octopress::Hooks::Page
