@@ -1,0 +1,9 @@
+---
+layout: page
+title: "404 - Page Not Found"
+comments: false
+sharing: false
+footer: false
+---
+<p>Sorry, the page you're looking for has been moved or deleted.</p>
+<a href="{{root_url}}/blog/archives">View Archives</a> or <a href="{{root_url}}">Return Home</a>
