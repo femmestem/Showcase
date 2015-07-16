@@ -57,7 +57,7 @@ body {
   max-width: $max-width;
   position: relative;
   margin: 0 auto;
-  > header, > nav, > footer, #content > article, #content > div > article, #content > div > section, #project-title, #project-description {
+  > header, > nav, > footer, #content > article, #content > div > article, #content > div > section, #content > h1, #project-title, #project-description {
     @extend .group;
     padding-left: $pad-min;
     padding-right: $pad-min;
@@ -100,7 +100,11 @@ body {
 
 #content {
   overflow: hidden;
-  > div, > article { width: 100%; }
+  > div,
+  > article {
+    width: 100%;
+    .meta { position: relative; }
+  }
 }
 
 aside.sidebar {
@@ -179,7 +183,7 @@ body.sidebar-footer {
   body > header { font-size: $header-font-size * 1.3; }
   #content { margin-right: $sidebar-width-wide; }
   #content {
-    > div, > article {
+    > div, > article, h1 {
       padding-top: $pad-wide/2;
       padding-bottom: $pad-wide/2;
     }
