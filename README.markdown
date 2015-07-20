@@ -1,22 +1,18 @@
 ## What is Showcase?
-Showcase is an open-source framework for quickly generating a portfolio web site to showcase your projects with image slideshow galleries, link to GitHub repository, and integrated blog that supports embedded code. It's easy to use, with a collection of rake tasks to simplify development.
+Showcase is an open-source framework for quickly generating and deploying a portfolio web site to showcase your projects with slideshow image galleries, links to GitHub/BitBucket repositories, and an integrated blog that supports embedded code snippets. It's easy to use, with a collection of rake tasks to simplify development.
 
-It's written in semantic HTML5, pre-styled with a clean, mobile-friendly theme that's also highly customizable. Best of all, it's built on top of Jekyll -- since GitHub Pages are powered by Jekyll, your site is ready to deploy in minutes, for free.
+It's written in semantic HTML5, and pre-styled with a clean, responsive theme that's readily deployable yet highly customizable. Best of all, it's built on top of Jekyll -- since GitHub Pages are powered by Jekyll, your site is ready to deploy in minutes, for free.
 
 
-### Portfolio Features
-Want to showcase your design skills in a separate portfolio from your site builds and web apps? This framework supports multiple portfolios.
+### Features
+Want a portfolio that dynamically creates webpages for every project in its folder? How about showcasing your design projects, code projects, photography projects, etc. in separate portfolios? You'll love Showcase.
 
-1. **Multiple portfolio support** and as many projects per portfolio as you want
-2. **Project page layouts with slideshow gallery** using the SlickJS image carousel library
-3. **Projects have dedicated image gallery folders** to easily manage project-specific images like app demo screenshots, mock-ups, etc.
-4. **Third-party integration is simple** with built-in support for GitHub Repositories and Google Analytics
-5. **Compatible with Octopress themes** that use the classic directory structure
+1. **Multiple portfolio support** with as many projects per portfolio as you want.
+2. **Project page templates with built-in slideshow gallery** that automatically loads images stored in the project's image folder.
+3. **Blog integration using Octopress 2.0/Jekyll** plus added features: draft and published post mode, rake commands to publish and unpublish multiple posts at once, and site preview with and without drafts.
+4. **Third-party integration is simple** with built-in support for GitHub repositories, Google Analytics, Disqus Comments and social media sharing (Twitter, Facebook, Delicious, Pinboard).
+5. **Customizable, with community-driven plugins** built for and by Octopress 2.0 and Jekyll users. See available [plugins](https://github.com/imathis/octopress/wiki/3rd-party-plugins).
 
-### Blog Features
-1. **Posts and Drafts** plus site preview with and without drafts
-2. **Publish or Unpublish multiple posts at once** with a single rake task
-3. **Third-party integration** with built-in support for Disqus Comments and social media sharing (Twitter, Facebook, Delicious, Pinboard)
 
 ## Quickstart
 
@@ -47,9 +43,9 @@ $ bundle install
 ## Documentation
 Documentation coming soon!
 
-Much of the site, blog, and deployment configurations are covered in the guides and documentation at [Octopress.org](http://octopress.org/docs), as this site is a portfolio-centric expansion of the Octopress 2.0 framework. Additional features are listed below.
+Much of the site, blog, and deployment configurations are covered in the guides and documentation at [Octopress.org](http://octopress.org/docs), since this site is a portfolio-focused expansion of the Octopress 2.0 blogging framework. Additional features are listed below.
 
-Portfolio features are based on Jekyll Collections, an experimental feature introduced in Jekyll 2.0. The `new_portfolio` and `new_project` rake tasks set up collections for you, but if you want to peek under the hood, check out [Jekyll Collections](http://jekyllrb.com/docs/collections/).
+Portfolio features are based on Jekyll Collections, an experimental feature introduced in Jekyll 2.0. The `new_portfolio` and `new_project` rake tasks set up this functionality for you. If you want to know how it works, check out [Jekyll Collections](http://jekyllrb.com/docs/collections/).
 
 ### Some of the Rake tasks available to you:
 
@@ -67,15 +63,15 @@ Creates a new page at `source/filename/index.markdown` or `source/filename.ext`
 - Given filename with extension: creates a new page as `filename.ext`
 
 **rake new_portfolio[title]**  
-Creates a new portfolio folder `source/_portfolio-title/` and a projects archive page at `source/_portfolio-title/index.html`. Also updates Jekyll::Site::Collections* list in `_config.yml` and `source/_data/collections.yml`.
+Creates a new portfolio folder `source/_portfolio-title/` and portfolio index page with album-cover style list of projects at `source/_portfolio-title/index.html`. Also updates Jekyll Collections* in `_config.yml` and `source/_data/collections.yml`.
 
 - No title given: prompts for a title (otherwise defaults to `_new-portfolio/`)
 - Given title: creates `_portfolio-title/`
 
-*By registering the portfolio to Jekyll::Site::Collections, the folder becomes Liquid-accessible, e.g. `{% site.portfolio-title %}` returns an array of Document objects in `_portfolio-title/`, much like `site.pages` and `site.posts`
+*By registering the portfolio to Jekyll::Site::Collections, the folder becomes Liquid-accessible, i.e. `{% site.portfolio-title %}` returns an array of Document objects in `_portfolio-title/`, much like working with `site.pages` and `site.posts`
 
 **rake new_project[filename]**  
-Creates a new project page at `source/_portfolio-title/filename.markdown`
+Creates a new project page at `source/_portfolio-title/filename.markdown` and project-specific image folder at `source/images/project-title/`. Images stored in this folder will be automatically loaded into the project's slideshow gallery.
 
 - No filename given: prompts for a title (otherwise defaults to "new project") and presents a selection menu to choose portfolio
 - Given filename: uses filename for project title, presents a selection menu to choose portfolio
@@ -107,7 +103,7 @@ Moves post from `source/_posts/yyyy-mm-dd-title.markdown` to `source/_drafts/tit
 ## License
 The MIT License (MIT)
 
-**Showcase** the portfolio and blog site generator for hackers 
+**Showcase** the quicklaunch portfolio and integrated blog site generator for hackers  
 Copyright © 2014-2015 Christine Feaster
 
 **Octopress** the obsessively designed framework built for Jekyll blogging  
