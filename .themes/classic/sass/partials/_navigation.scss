@@ -116,12 +116,12 @@ body > nav {
                 label[for="search-box"]::before {
                     position: absolute;
                     left: -1em;
-                    top: .5em;
-                    padding: .25em;
+                    top: .25em;
                 }
             }
             .search {
                 width: 95%;
+                text-indent: .5em;
             }
         }
         ul {
