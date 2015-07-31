@@ -10,5 +10,5 @@ This is your landing page. You can write content in markdown or HTML.
 {% endcomment %}
 
 #Welcome to Showcase
-##Why do you add some content?
-Write your own content in `source/index.markdown`
+##Why don't you add some content?
+Replace this content with your own in `source/index.markdown`

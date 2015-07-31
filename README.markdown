@@ -1,7 +1,7 @@
 ## What is Showcase?
 Showcase is an open-source framework for quickly generating and deploying a portfolio web site to showcase your projects with slideshow image galleries, links to GitHub/BitBucket repositories, and an integrated blog that supports embedded code snippets. It's easy to use, with a collection of rake tasks to simplify development.
 
-It's written in semantic HTML5, and pre-styled with a clean, responsive theme that's readily deployable yet highly customizable. Best of all, it's built on top of Jekyll -- since GitHub Pages are powered by Jekyll, your site is ready to deploy in minutes, for free.
+It's written in semantic HTML5, and pre-styled with a clean, responsive theme that's site ready yet highly customizable. Best of all, it's built on top of Jekyll -- since GitHub Pages are powered by Jekyll, your site is ready to deploy in minutes, for free.
 
 
 ### Features
