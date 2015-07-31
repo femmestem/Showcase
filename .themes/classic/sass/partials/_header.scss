@@ -1,5 +1,5 @@
 body > header {
-  background: $header-bg;
+  @include background($header-bg);
   h1 {
     display: inline-block;
     margin: 0;

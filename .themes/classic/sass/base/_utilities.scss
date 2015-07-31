@@ -20,8 +20,21 @@
   }
 }
 
+@mixin background($bg, $bg-color:""){
+  background-color: if(unquote(#{$bg-color}), $bg-color, #999);
+  background: $bg;
+}
+
 @function text-color($color, $dark: dark, $light: light){
   $text-color: ( (red($color)*299) + (green($color)*587) + (blue($color)*114) ) / 1000;
   $text-color: if($text-color >= 150, $dark, $light);
   @return $text-color;
+}
+
+@function tint-color($color, $alpha, $bg) {
+        @return linear-gradient(
+            rgba($color, $alpha),
+            rgba($color, $alpha)
+        ),
+        $bg;
 }

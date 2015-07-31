@@ -1,5 +1,6 @@
 /* Main Background Images */
 $noise-bg: image-url('noise.png') top left !default;
+$geometric-bg: image-url('footer_lodyas.png') top left !default;
 $img-border: inline-image('dotted-border.png') !default;
 
 
@@ -16,7 +17,7 @@ $main-bg: #f8f8f8 !default;
 $page-bg: #222 !default;
 $article-border: #eeeeee !default;
 $type-border: #ddd !default;
-$header-bg: image-url('footer_lodyas.png') top left !default;
+$header-bg: $geometric-bg;
 $header-border: lighten(#333, 15) !default;
 
 // Font
