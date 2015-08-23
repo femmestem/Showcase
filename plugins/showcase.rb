@@ -97,12 +97,14 @@ module Showcase
     File.delete("#{orig_file}.old")
 
     unless registry_found
-      collection_registry_error(orig_file, data)
+      collection_registry_error(orig_file, entry)
     end
   end
 
   def collection_registry_error(file, record)
     msg = []
+    separator = "# ------------"
+
     msg << "CollectionsRegistryError: \'collections:\' registry key not found in #{file}"
     msg << "Add \'collections:\' to #{file} and run rake new_portfolio again"
     msg << "or copy and paste below record into #{file}"
