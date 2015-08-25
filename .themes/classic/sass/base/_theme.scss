@@ -74,12 +74,6 @@ $slider-bg: $main-bg !default;
 $slider-nav-bg: #333 !default;
 $slider-arrow-color: lighten($slider-nav-bg, 30) !default;
 
-// Size - Aspect Ratio for Main Slide
-// - standard aspect ratios (landscape): 4/3, 16/9
-// - standard aspect ratios (portrait): 3/4, 9/16
-// - adaptive height: 1
-$slide-previewer-aspect-ratio: 16/9 !default; 
-
 /* Portfolio Index - Project Album Covers */
 // Background
 $project-cover-bg: #FFF !default;

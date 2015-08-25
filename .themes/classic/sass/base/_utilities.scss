@@ -38,3 +38,13 @@
         ),
         $bg;
 }
+
+@function slide-height($aspect-ratio, $device-width){
+    $height: if($aspect-ratio == 1, 100%, $device-width/$aspect-ratio);
+    @return $height;
+}
+
+@function slide-height-no-sidebar($aspect-ratio, $device-width){
+        $height: if($aspect-ratio == 1, 100%, $device-width/$aspect-ratio);
+    @return $height;
+}

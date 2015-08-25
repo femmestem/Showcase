@@ -4,10 +4,10 @@ $slide-previewer-width-small: 480px !default;
 $slide-previewer-width-medium: 640px !default;
 $slide-previewer-width-wide: 768px !default;
 
-// Slider image aspect ratio for main slide
-// standard aspect ratios (landscape): 4/3, 16/9
-// standard aspect ratios (portrait): 3/4, 9/16
-// adaptive height: 1
+// Size - Aspect Ratio for Main Slide
+// - standard aspect ratios (landscape): 4/3, 16/9
+// - standard aspect ratios (portrait): 3/4, 9/16
+// - adaptive height: 1
 $slide-previewer-aspect-ratio: 16/9 !default; 
 
 .slider-wrapper, .slider-nav { background: $slider-nav-bg; }
@@ -52,13 +52,13 @@ $slide-previewer-aspect-ratio: 16/9 !default;
         max-height: $slide-previewer-width-mobile/$slide-previewer-aspect-ratio;
         overflow: hidden;
         @media only screen and (min-width: 480px) {
-        max-height: $slide-previewer-width-small/$slide-previewer-aspect-ratio;
+          max-height: slide-height($slide-previewer-aspect-ratio, $slide-previewer-width-small)
         }
         @media only screen and (min-width: 768px) {
-        max-height: $slide-previewer-width-medium/$slide-previewer-aspect-ratio;
+          max-height: slide-height($slide-previewer-aspect-ratio, $slide-previewer-width-medium)
         }
         @media only screen and (min-width: 992px) {
-        max-height: $slide-previewer-width-wide/$slide-previewer-aspect-ratio;
+          max-height: slide-height($slide-previewer-aspect-ratio, $slide-previewer-width-wide)
         }
     }
 }
@@ -76,7 +76,7 @@ $slide-previewer-aspect-ratio: 16/9 !default;
             width: $slide-previewer-width-medium * 1.25;
         }
         .slider-hero {
-            max-height: ($slide-previewer-width-medium * 1.25)/$slide-previewer-aspect-ratio;
+            max-height: slide-height-no-sidebar($slide-previewer-aspect-ratio, $slide-previewer-width-medium)
         }
     }
 }
@@ -89,7 +89,7 @@ $slide-previewer-aspect-ratio: 16/9 !default;
             width: $slide-previewer-width-wide * 1.25;
         }
         .slider-hero {
-            max-height: ($slide-previewer-width-wide * 1.25)/$slide-previewer-aspect-ratio;
+            max-height: slide-height-no-sidebar($slide-previewer-aspect-ratio, $slide-previewer-width-wide)
         }
     }
 }
