@@ -1,7 +1,16 @@
 ---
 layout: default
 ---
-{% if page.title %}<h1 id="project-title">{{ page.title }}</h1>{% endif %}
+<div class="project">
+<article role="article">
+  {% if page.title %}
+  <header>
+    <h1 class="entry-title">{% if site.titlecase %}{{ page.title | titlecase }}{% else %}{{ page.title }}{% endif %}</h1>
+    {% if page.date %}<p class="meta">{% include post/date.html %}{{ time }}</p>{% endif %}
+  </header>
+  {% endif %}
+</article>
+</div>
 {% if page.gallery_path.size > 0 or page.include_images.size > 0 %}
 <div class="slider-wrapper">
   <div class="slider-hero">
@@ -34,6 +43,8 @@ layout: default
     </div>
 </div>
 {% endif %}
-<section id="project-description">
-  {{ content }}
-</section>
+<div>
+<article role="article">
+    {{ content }}
+</article>
+</div>

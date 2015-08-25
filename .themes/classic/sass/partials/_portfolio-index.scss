@@ -106,3 +106,9 @@ body {
         }
     }
 }
+
+body {
+    #content > .project {
+        float: none;
+    }
+}
