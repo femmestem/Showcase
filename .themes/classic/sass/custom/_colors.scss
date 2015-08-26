@@ -2,17 +2,37 @@
 // To give it a try, uncomment some of the lines below rebuild your blog, and see how it works.
 // If you need a handy color picker try http://hslpicker.com
 
-// $header-bg: #263347;
-// $subtitle-color: lighten($header-bg, 58);
-// $nav-bg: desaturate(lighten(#8fc17a, 18), 5);
-//$nav-bg-front: image-url('noise.png');
-//$nav-bg-back: linear-gradient(lighten($nav-bg, 8), $nav-bg, darken($nav-bg, 11));
-// $sidebar-bg: desaturate(#eceff5, 8);
-//$sidebar-link-color: saturate(#526f9a, 10);
-//$sidebar-link-color-hover: darken(#7ab662, 9);
-//$footer-bg: #ccc !default;
-//$footer-bg-front: image-url('noise.png');
-//$footer-bg-back: linear-gradient(lighten($footer-bg, 8), $footer-bg, darken($footer-bg, 11));
+// $header-bg: tint-color(#0A0564, 0.20, $geometric-bg);
+// $nav-bg: desaturate(lighten(#B27E2E, 18), 5);
+// $footer-bg: $nav-bg;
+// $sidebar-bg: lighten($nav-bg, 25);
+// $subtitle-color: lighten(#FFCC60, 20);
+// $link-color: saturate(darken($nav-bg, 15), 20);
+
+/* The selectors below reference the colors set for the selectors above so the footer matches the nav bar and the borders accent their container */
+// =================================================
+// $nav-bg-gradient: linear-gradient(lighten($nav-bg, 8), $nav-bg, darken($nav-bg, 11));
+// $nav-color: darken($nav-bg, 30);
+// $nav-color-hover: lighten($nav-color, 15);
+// $nav-placeholder: desaturate(darken($nav-bg, 10), 15);
+// $nav-border: darken($nav-bg, 10);
+// $nav-border-top: lighten($nav-bg, 15);
+// $nav-border-bottom: darken($nav-bg, 25);
+// $nav-border-left: darken($nav-bg, 11);
+// $nav-border-right: lighten($nav-bg, 7);
+// $link-color-hover: adjust-color($link-color, $lightness: 15, $saturation: 20);
+// $link-color-visited: adjust-color($link-color, $hue: 80, $lightness: -4);
+// $link-color-active: adjust-color($link-color-hover, $lightness: -15);
+// $sidebar-color: change-color(mix($text-color, $sidebar-bg, 80), $hue: hue($sidebar-bg), $saturation: saturation($sidebar-bg)/2);
+// $sidebar-link-color: $text-color;
+// $sidebar-link-color-hover: $link-color-hover;
+// $sidebar-link-color-active: $link-color-active;
+// $sidebar-link-color-subdued: lighten($sidebar-color, 20);
+// $sidebar-link-color-subdued-hover: $sidebar-link-color-hover;
+// $footer-bg-gradient: linear-gradient(lighten($footer-bg, 8), $footer-bg, darken($footer-bg, 11));
+// $footer-color: darken($footer-bg, 25);
+// $footer-color-hover: darken($footer-color, 10);
+// =================================================
 
 
 /* To use the light Solarized highlighting theme uncomment the following line */
