@@ -41,11 +41,8 @@ $ bundle install
 `$ rake install`
 
 ## Documentation
-Documentation coming soon!
 
-Much of the site, blog, and deployment configurations are covered in the guides and documentation at [Octopress.org](http://octopress.org/docs), since this site is a portfolio-focused expansion of the Octopress 2.0 blogging framework. Additional features are listed below.
-
-Portfolio features are based on Jekyll Collections, an experimental feature introduced in Jekyll 2.0. The `new_portfolio` and `new_project` rake tasks set up this functionality for you. If you want to know how it works, check out [Jekyll Collections](http://jekyllrb.com/docs/collections/).
+Documentation is available at [Showcaserb.org](http://www.showcaserb.org)
 
 ### Some of the Rake tasks available to you:
 
