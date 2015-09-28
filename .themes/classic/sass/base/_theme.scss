@@ -41,7 +41,7 @@ $search-bg: #f8f8f8 !default;
 
 // Font
 $nav-color: darken($nav-bg, 30);
-$nav-color-hover: darken($nav-color, 10) !default;
+$nav-color-hover: lighten($nav-color, 15) !default;
 
 /* Sidebar Colors */
 // Background
