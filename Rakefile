@@ -232,11 +232,10 @@ task :new_project, :filename do |t, args|
   project_path = "#{source_dir}/#{portfolio}/#{project}.#{ext}"
   abort("rake aborted!") if File.exist? project_path unless overwrite_confirmed? project_path
 
-  gallery_path = "../../images/#{project}/"
   yml = {
   layout: "project",
   title: "\"#{title}\"",
-  gallery_path: "#{gallery_path}",
+  gallery_path: "../../#{project}",
   include_images: "[]",
   cover_image_path: "",
   site: "",
@@ -247,8 +246,8 @@ task :new_project, :filename do |t, args|
   puts "Creating new project page \"#{project}.#{ext}\" in \"#{portfolio}/\""
   puts "> #{project_path}"
   write_new_page(project_path, yml)
-  puts "Creating project image gallery at \"#{gallery_path}\""
-  mkdir_p gallery_path
+  puts "Creating project image gallery at \"#{source_dir}/images/#{project}\""
+  mkdir_p "#{source_dir}/images/#{project}"
 end
 
 # usage rake new_draft[my-unpublished-draft] or rake new_draft['my new unpublished draft'] or rake new_draft (defaults to "new-draft")
