@@ -235,7 +235,7 @@ task :new_project, :filename do |t, args|
   yml = {
   layout: "project",
   title: "\"#{title}\"",
-  gallery_path: "../../#{project}",
+  gallery_path: "../../images/#{project}/",
   include_images: "[]",
   cover_image_path: "",
   site: "",
