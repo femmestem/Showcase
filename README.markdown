@@ -3,6 +3,8 @@ Showcase is an open-source framework for quickly generating and deploying a port
 
 It's written in semantic HTML5, and pre-styled with a clean, responsive theme that's site ready yet highly customizable. Best of all, it's built on top of Jekyll -- since GitHub Pages are powered by Jekyll, your site is ready to deploy in minutes, for free.
 
+Check out the <a target="_blank" href="https://showcase-demo-app.herokuapp.com">demo app</a>
+
 
 ### Features
 Want a portfolio that dynamically creates webpages for every project in its folder? How about showcasing your design projects, code projects, photography projects, etc. in separate portfolios? You'll love Showcase.
@@ -101,13 +103,13 @@ Moves post from `source/_posts/yyyy-mm-dd-title.markdown` to `source/_drafts/tit
 The MIT License (MIT)
 
 **Showcase** the quicklaunch portfolio and integrated blog site generator for hackers  
-Copyright © 2014-2015 Christine Feaster
+Copyright © 2014-2016 Christine Feaster
 
 **Octopress** the obsessively designed framework built for Jekyll blogging  
-Copyright © 2009-2015 Brandon Mathis
+Copyright © 2009-2016 Brandon Mathis
 
 **Jekyll** the blog-aware static site generator in Ruby  
-Copyright © 2008-2015 Tom Preston-Werner
+Copyright © 2008-2016 Tom Preston-Werner
 
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ‘Software’), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
